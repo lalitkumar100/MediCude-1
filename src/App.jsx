@@ -4,35 +4,34 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import MainLayout from "./layouts/MainLayout";
 import WorkerLayout from "./layouts/WorkerLayout";
 
-// Public Pages
-import LoginPage from "./LoginPage";
 
-// Admin Pages
-import DashboardPage from "./page/dashboard/DashboardPage";
-import AddStock from ".page/add-stocks/AddStockPage";
-import Stock from "./stock/StockPage";
-import UpdateStock from "./stock/update/UpdateMedicinePage";
-import Report from "./report/ReportPage";
-import WholesalerReportPage from "./report/wholesaler/WholesalerReportPage";
-import InvoiceReportPage from "./report/invoice/InvoiceReportPage";
-import SalesReportPage from "./report/sales/SalesReportPage";
-import StockReturnPage from "./report/Stock-Return/StockReturnPage";
-import Staff from "./staff/StaffPage";
-import AddEmployeePage from "./staff/add-employee/AddEmployeePage";
-import Todo from "./todo/TodoPage";
-import ProfilePage from "./profile/ProfilePage";
-import Billing from "./billing/BillingPage";
 
-// Worker Pages
+import LoginPage from "./pages/LoginPage";
+
+import DashboardPage from "./pages/dashboard/DashboardPage";
+import AddStock from "./pages/add-stocks/AddStockPage";
+import Stock from "./pages/stock/StockPage";
+import UpdateStock from "./pages/stock/update/UpdateMedicinePage"
+import Report from "./pages/report/ReportPage";
+import WholesalerReportPage from "./pages/report/wholesaler/WholesalerReportPage";
+import InvoiceReportPage from "./pages/report/invoice/InvoiceReportPage";
+import SalesReportPage from "./pages/report/sales/SalesReportPage";
+import Staff from "./pages/staff/StaffPage";
+import AddEmployeePage from "./pages/staff/add-employee/AddEmployeePage";
+import Todo from "./pages/todo/TodoPage";
+import ProfilePage from "./pages/profile/ProfilePage";
+// import Settings from "./";
+import Billing from "./pages/billing/BillingPage";
+
 import WorkerDashboard from "./Worker/Dashboard";
 import WorkerSalesReportPage from "./Worker/sales/SalesReportPage";
 import WorkerTodoPage from "./Worker/TodoPage";
 import WorkerStockPage from "./Worker/stock/StockPage";
 import WorkerBillingPage from "./Worker/billing/BillingPage";
-
+import StockReturnPage from "./pages/report/Stock-Return/StockReturnPage";
 export default function App() {
   return (
-    <BrowserRouter>
+  <BrowserRouter>
       <Routes>
         {/* Public Routes - No Layout */}
         <Route path="/login" element={<LoginPage />} />

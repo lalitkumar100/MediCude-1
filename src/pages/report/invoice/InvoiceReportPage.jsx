@@ -185,21 +185,7 @@ export default function InvoiceReportPage() {
   };
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "Reports", href: "/report" },
-              { label: "Invoice Reports", href: "/invoice" },
-            ]}
-            currentPage="Invoice Reports"
-          />
-        </header>
-
+    <>
         {/* Main Content */}
         <div className="flex flex-1 flex-col">
           {/* Back Button and Title */}
@@ -413,7 +399,7 @@ export default function InvoiceReportPage() {
           onClose={handleCloseModal}
           invoiceId={invoiceId}
         />
-      </SidebarInset>
-    </SidebarProvider>
+
+      </>
   );
 }

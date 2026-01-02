@@ -3,23 +3,16 @@ import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import PageBreadcrumb from "@/components/PageBreadcrumb"
 import { AppSidebar } from "@/components/AppSidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
+
 import {
   SidebarInset,
   SidebarProvider,
-  SidebarTrigger,
+
 } from "@/components/ui/sidebar";
 import { ArrowLeft } from "lucide-react";
 import {
@@ -125,23 +118,10 @@ export default function AddEmployeePage() {
   };
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-         <PageBreadcrumb
-         items={
-          [
-                { label: "PharmaDesk", href: "/dashboard" },
-    { label: "staff" , href: "/staff"},
-     { label: "add-employee" , href: "staff/add-employee"}]
-         }
-         />
-        </header>
 
+<>
         {/* Main Content */}
-        <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
+        <div className="flex flex-1 flex-col gap-4 p-0 pt-0">
           <div className="flex items-center gap-4">
             <Button
               variant="ghost"
@@ -332,7 +312,8 @@ export default function AddEmployeePage() {
             </div>
           </form>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+
+      </>
+
   );
 }

@@ -4,15 +4,7 @@ import axios from "axios";
 import { AppSidebar } from "@/components/AppSidebar";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import SectionHeader from "@/components/SectionHeader";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
-import { Separator } from "@/components/ui/separator";
+
 import {
   SidebarInset,
   SidebarProvider,
@@ -143,20 +135,9 @@ export default function StaffPage() {
   const currentStaff = sortedStaff.slice(startIndex, endIndex);
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        {/* HEADER */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "staff", href: "/staff" },
-            ]} />
-        </header>
-
+<>
         {/* CONTENT */}
-        <div className="p-4 space-y-4">
+        <div className="p-0 space-y-4">
           <SectionHeader
             title="Staff Directory"
             description="View and manage your pharmacy staff members." />
@@ -326,7 +307,8 @@ export default function StaffPage() {
             )}
           </DialogContent>
         </Dialog>
-      </SidebarInset>
-    </SidebarProvider>
+  
+</>
+
   );
 }

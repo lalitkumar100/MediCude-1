@@ -211,26 +211,11 @@ export default function BillingPage() {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset className={`${activeCounterConfig.bgColor} transition-colors duration-500`}>
-        {/* IMPORTANT: Render Toaster here or in App.jsx */}
-        <Toaster position="top-right" richColors /> 
-        
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 bg-white/80 backdrop-blur-sm sticky top-0 z-10 border-b px-4">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "Billing", href: "/billing" },
-              { label: activeCounterConfig.name },
-            ]}
-            currentPage="New Sale"
-          />
-        </header>
+    <>
+
 
         {/* Main Content */}
-        <div className="flex flex-1 flex-col gap-6 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex flex-1 flex-col gap-6 p-0 max-w-7xl mx-auto w-full">
           
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <h1 className="text-3xl font-bold tracking-tight text-slate-800 flex items-center gap-2">
@@ -457,7 +442,7 @@ export default function BillingPage() {
             </div>
           </div>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+
+</>
   )
 }

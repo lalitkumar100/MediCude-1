@@ -141,7 +141,7 @@ export default function MainLayout() {
         <Toaster position="top-right" richColors />
         
         {/* Header - Renders once, stays mounted */}
-        <header className="flex h-16 shrink-0 items-center gap-2 bg-white/80 backdrop-blur-sm sticky top-0 z-10 border-b px-4">
+        <header className="flex h-16 shrink-0 items-center gap-2 bg-white/80 backdrop-blur-sm sticky top-0 z-999 border-b px-4">
           <PageBreadcrumb
             items={breadcrumbConfig.items}
             currentPage={breadcrumbConfig.currentPage}
@@ -149,7 +149,7 @@ export default function MainLayout() {
         </header>
 
         {/* Main Content - Child routes render here via <Outlet /> */}
-        <div className="flex flex-1 flex-col gap-6 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex flex-1 flex-col gap-6 p-2 max-w-7xl mx-auto w-full">
           <Outlet />
         </div>
 

@@ -244,10 +244,7 @@ export default function StockEntryPage() {
 
   // --- RENDER: MAIN PAGE ---
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        
+<>     
         {/* FILE UPLOAD OVERLAY (Blur Effect) */}
         {fileProcessing && (
           <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-gray-900/30 backdrop-blur-md">
@@ -257,19 +254,8 @@ export default function StockEntryPage() {
             </div>
           </div>
         )}
-
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 px-4 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "Stock Entry" },
-            ]}
-          />
-        </header>
-
         {/* Main Content */}
-        <div className="flex flex-1 flex-col gap-6 p-4 pt-0 max-w-7xl mx-auto w-full">
+        <div className="flex flex-1 flex-col gap-6 p-0 pt-0 max-w-7xl mx-auto w-full">
           
           <SectionHeader
             title="Stock Entry"
@@ -476,7 +462,7 @@ export default function StockEntryPage() {
             </CardContent>
           </Card>
         </div>
-      </SidebarInset>
+ 
 
       {showAddMedicineModal && (
         <AddMedicineModal
@@ -484,6 +470,7 @@ export default function StockEntryPage() {
           onAddMedicine={handleAddMedicine}
         />
       )}
-    </SidebarProvider>
+</>
+
   );
 }
