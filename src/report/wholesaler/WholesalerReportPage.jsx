@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+  import { downloadAsExcel } from "@/lib/download-utils"
 
 import {
   SidebarInset,
@@ -15,11 +16,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X, Search, ChevronLeft, ChevronRight, ArrowLeft, Plus } from "lucide-react";
+import { X, Search, ChevronLeft, ChevronRight, ArrowLeft, Plus,FileSpreadsheet } from "lucide-react";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import WholesalerDetailsModal from "./WholesalerDetailsModal";
+import AddWholesalerModal from "./AddWholesalerModal";
 
 export default function WholesalerReportPage() {
   const navigate = useNavigate();
@@ -32,6 +34,31 @@ export default function WholesalerReportPage() {
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [sampleWholesalers, setSampleWholesalers] = useState([]);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const handleCloseAddModal = () => {
+    setIsAddModalOpen(false);
+  };
+
+  const handleExcelReport = async () => {
+    try{
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/export/excel?table=wholesalers`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      downloadAsExcel(res.data.data, "wholesalers");
+    } catch (err) {
+      console.error("Error fetching Excel report:", err);
+    }
+  };
+
+  const handleAddWholesaler = () => {
+    setIsAddModalOpen(true);
+  }
 
   useEffect(() => {
     const fetchWholesalers = async () => {
@@ -146,6 +173,15 @@ export default function WholesalerReportPage() {
             <h1 className="text-2xl font-bold text-gray-800">
               Wholesaler List
             </h1>
+
+            <Button
+              onClick={handleExcelReport}
+              disabled={loading}
+              className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Export Excel
+            </Button>
           </div>
 
           {/* Sticky Filter Bar */}
@@ -188,6 +224,7 @@ export default function WholesalerReportPage() {
 
               <div className="w-full md:w-auto md:ml-auto">
                 <Button 
+                onClick={handleAddWholesaler}
                   className="w-full sm:w-auto bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white"
                 >
                   <Plus className="h-4 w-4 mr-2" />
@@ -328,6 +365,11 @@ export default function WholesalerReportPage() {
           isOpen={isViewModalOpen}
           onClose={handleCloseModal}
           wholesaler={selectedWholesaler}
+        />
+
+        <AddWholesalerModal
+          isOpen={isAddModalOpen}
+          onClose={handleCloseAddModal}
         />
       </SidebarInset>
     </SidebarProvider>

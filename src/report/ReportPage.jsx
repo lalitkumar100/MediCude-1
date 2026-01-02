@@ -1,47 +1,47 @@
-import React from "react"
+import React, { useState } from "react"; // Added useState import
 import { AppSidebar } from "@/components/AppSidebar"
 import PageBreadcrumb from "@/components/PageBreadcrumb"
 import SectionHeader from "@/components/SectionHeader"
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
+
+import { MainPanel } from "@/components/panels/main-panel"
+
+import { ThemeProvider } from "@/components/theme-provider"
+
+
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Factory, ReceiptText, CalendarX, LineChart } from "lucide-react"
+// Added Shell icon here
+import { Factory, ReceiptText, CalendarX, LineChart, Shell } from "lucide-react" 
 import { useNavigate, Link } from "react-router-dom";
 
 export default function ReportPage() {
   const navigate = useNavigate();
+   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   return (
+    <ThemeProvider>
     <SidebarProvider>
       <AppSidebar />
-      <SidebarInset>
+      <SidebarInset className="relative"> {/* Added relative to ensure button positioning context */}
         {/* Header */}
         <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-                      <PageBreadcrumb
-                               items={[
-                 { label: "PharmaDesk", href: "/dashboard" },
-                 { label: "Reports" , href: "/report"}]} />
+          <PageBreadcrumb
+            items={[
+              { label: "PharmaDesk", href: "/dashboard" },
+              { label: "Reports", href: "/report" }
+            ]} />
         </header>
 
         {/* Main Content */}
         <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-          {/* Welcome Section */}
           <SectionHeader
             title="Reports Overview"
             description="Access various reports to gain insights into your pharmacy operations."
           />
-          {/* Report Cards */}
+          
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <Card
-              className="cursor-pointer hover:shadow-lg hover:bg-cyan-100 transition-shadow duration-200"
+            {/* Wholesaler Card */}
+            <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:bg-cyan-100  active:bg-cyan-100 active:shadow-lg"
               onClick={() => navigate("/report/wholesaler")}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -54,8 +54,9 @@ export default function ReportPage() {
               </CardContent>
             </Card>
 
+            {/* Invoice Card */}
             <Card
-              className="cursor-pointer hover:shadow-lg  hover:bg-purple-100 transition-shadow duration-200"
+              className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:bg-purple-100  active:bg-purple-100 active:shadow-lg"
               onClick={() => navigate("/report/invoice")}
             >
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -68,18 +69,21 @@ export default function ReportPage() {
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-lg hover:bg-red-100 transition-shadow duration-200">
+            {/* Expiry Card */}
+            <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:bg-red-100  active:bg-red-100 active:shadow-lg"
+             onClick={() => navigate("/report/stock-return")}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Expiry Reports</CardTitle>
+                <CardTitle className="text-sm font-medium">Purchase Return Reports</CardTitle>
                 <CalendarX className="h-4 w-4 text-red-600" />
               </CardHeader>
               <CardContent>
-                <div className="text-xl font-bold text-red-600">Expiring Stock</div>
-                <p className="text-xs text-muted-foreground">Monitor upcoming expirations</p>
+                <div className="text-xl font-bold text-red-600">Return Stock</div>
+                <p className="text-xs text-muted-foreground">Monitor upcoming purchase returns</p>
               </CardContent>
             </Card>
 
-            <Card className="cursor-pointer hover:shadow-lg hover:bg-green-100 transition-shadow duration-200"
+            {/* Sales Card */}
+            <Card className="cursor-pointer transition-all duration-200 hover:shadow-lg hover:bg-green-100  active:bg-green-100 active:shadow-lg"
             onClick={() => navigate("/report/sales")}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Sales Reports</CardTitle>
@@ -92,7 +96,17 @@ export default function ReportPage() {
             </Card>
           </div>
         </div>
+
+        {/* --- Floating Round Shell Button --- */}
+        <button 
+          className="fixed bottom-8 right-8 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all active:scale-95 z-50 flex items-center justify-center"
+         onClick={() => setIsPanelOpen(true)}>
+        
+          <Shell className="h-6 w-6" />
+        </button>
+   <MainPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
       </SidebarInset>
     </SidebarProvider>
+     </ThemeProvider>
   )
 }

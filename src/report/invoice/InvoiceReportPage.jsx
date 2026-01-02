@@ -21,9 +21,11 @@ import {
   ChevronLeft,
   ChevronRight,
   ArrowLeft,
+  FileSpreadsheet ,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { downloadAsExcel } from "@/lib/download-utils"
 
 export default function InvoiceReportPage() {
   const navigate = useNavigate();
@@ -35,6 +37,8 @@ export default function InvoiceReportPage() {
   const [totalInvoice, setTotalInvoice] = useState(0);
   const [selectedInvoice, setSelectedInvoice] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [invoiceId, setInvoiceId] = useState(null);
+  const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
   useEffect(() => {
@@ -63,7 +67,7 @@ export default function InvoiceReportPage() {
     const fetchInvoiceByID = async () => {
       try {
         if (!isViewModalOpen || !selectedInvoice) return;
-
+        
         const res = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/admin/invoice/${
             selectedInvoice.invoice_id
@@ -74,7 +78,8 @@ export default function InvoiceReportPage() {
             },
           }
         );
-
+        console.log("Fetched Invoice Details:", res.data);
+        setInvoiceId(selectedInvoice.invoice_id);
         setSelectedInvoice(res.data);
       } catch (error) {
         console.log("Failed to Fetch Data", error);
@@ -93,6 +98,25 @@ export default function InvoiceReportPage() {
       invoice.name.toLowerCase().includes(searchValue)
     );
   });
+
+
+  const handleExcelReport = async () => {
+    try{
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/export/excel?table=invoices`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      downloadAsExcel(res.data.data, "invoices_report");
+    } catch (err) {
+      console.error("Error fetching Excel report:", err);
+    }
+  };
+
 
   const sortedInvoices = [...filteredInvoices].sort((a, b) => {
     switch (sortBy) {
@@ -189,6 +213,15 @@ export default function InvoiceReportPage() {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <h1 className="text-2xl font-bold text-gray-800">Invoice List</h1>
+
+               <Button
+              onClick={handleExcelReport}
+              disabled={loading}
+              className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+            >
+              <FileSpreadsheet className="h-4 w-4" />
+              Export Excel
+            </Button>
           </div>
 
           {/* Sticky Filter Bar */}
@@ -378,6 +411,7 @@ export default function InvoiceReportPage() {
           invoice={selectedInvoice}
           onDelete={handleDeleteInvoice}
           onClose={handleCloseModal}
+          invoiceId={invoiceId}
         />
       </SidebarInset>
     </SidebarProvider>

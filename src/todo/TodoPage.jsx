@@ -5,10 +5,11 @@ import SectionHeader from "@/components/SectionHeader";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
+import { MainPanel } from "@/components/panels/main-panel"
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { X, Search, ChevronLeft, ChevronRight, Plus, CheckCircle, Circle, Trash2 } from "lucide-react"
+import { Shell } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Dialog,
@@ -44,7 +45,7 @@ export default function TodoPage() {
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
-
+    const[isPanelOpen, setIsPanelOpen] = React.useState(false);
   const addTodo = () => {
     if (newTodoText.trim() !== "") {
       const newTodo = {
@@ -303,6 +304,16 @@ export default function TodoPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+
+       {/* --- Floating Round Shell Button --- */}
+        <button 
+          className="fixed bottom-8 right-8 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all active:scale-95 z-50 flex items-center justify-center"
+         onClick={() => setIsPanelOpen(true)}>
+        
+          <Shell className="h-6 w-6" />
+        </button>
+   <MainPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
     </SidebarProvider>
   )
 }

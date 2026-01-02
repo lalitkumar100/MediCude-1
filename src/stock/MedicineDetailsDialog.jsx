@@ -120,7 +120,7 @@ export function MedicineDetailsDialog({
           <Button
             variant="outline"
             onClick={() => {
-              onPurchaseReturn(medicine)
+              onPurchaseReturn(medicine.medicine_id)
               onOpenChange(false)
             }}
             className="border-orange-500 text-orange-600 hover:bg-orange-50 bg-transparent w-full sm:w-auto"

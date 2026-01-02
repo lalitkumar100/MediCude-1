@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { Shell } from "lucide-react"
+import { MainPanel } from "@/components/panels/main-panel"
+
 import { useNavigate } from "react-router-dom";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MedicineDetailsDialog } from "./MedicineDetailsDialog";
@@ -17,11 +20,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { X, Search, ChevronLeft, ChevronRight } from "lucide-react";
-
+import {
+  X, Search, ChevronLeft, ChevronRight, ArrowLeft,
+  FileSpreadsheet,
+} from "lucide-react";
+import { downloadAsExcel } from "@/lib/download-utils"
 export default function StockPage() {
   const navigate = useNavigate();
-
+    const[isPanelOpen, setIsPanelOpen] = React.useState(false);
   const [searchCriteria, setSearchCriteria] = useState("medicine_name");
   const debounceRef = useRef(null);
   const [medicines, setMedicines] = useState([]);
@@ -33,7 +39,7 @@ export default function StockPage() {
   const itemsPerPage = 10;
   const [selectedMedicine, setSelectedMedicine] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const fetchMedicines = async (page = 1, term, criteria) => {
     try {
       const offset = (page - 1) * itemsPerPage;
@@ -92,6 +98,23 @@ export default function StockPage() {
 
   const startIndex = (currentPage - 1) * itemsPerPage;
 
+  const handleExcelReport = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/export/excel?table=medicine_stock`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      downloadAsExcel(res.data.data, "medicine_stock_report");
+    } catch (err) {
+      console.error("Error fetching Excel report:", err);
+    }
+  };
+
   const clearSearch = () => {
     setSearchTerm("");
     fetchMedicines(1, searchTerm, searchCriteria);
@@ -110,9 +133,44 @@ export default function StockPage() {
     setIsViewModalOpen(true);
   };
 
-  const handlePurchaseReturn = (medicine) => {
-    console.log("Add to expiry:", medicine);
-  };
+const handlePurchaseReturn = async (medicineId) => {
+  // 1. Optional: Confirm before action
+  if (!window.confirm("Are you sure you want to move this medicine to expiry stock?")) {
+    return;
+  }
+
+  try {
+    // 2. Retrieve Token
+    const token = localStorage.getItem('token'); 
+
+    // 3. Make API Call
+    // Note: Ensure the URL matches exactly what you defined in your backend router.
+    // Based on previous steps, the route was '/admin/medicine_return/:id'
+    const response = await axios.put(
+      `${import.meta.env.VITE_BACKEND_URL}/admin/medicine_stock/return/${medicineId}`,
+      {}, // Empty body for POST request
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    // 4. Handle Success
+    if (response.data.status === 'success') {
+      toast.success(response.data.message);
+      
+      // RELOAD DATA: Call your data fetching function here to update the UI
+      // Example: fetchMedicineStock(); 
+    }
+
+  } catch (error) {
+    // 5. Handle Errors
+    console.error("Error returning medicine:", error);
+    const errMsg = error.response?.data?.message || "Failed to return medicine.";
+    toast.error(errMsg);
+  }
+};
 
   const handleUpdate = (medicineId) => {
     navigate(`/stock/update/${medicineId}`);
@@ -132,6 +190,30 @@ export default function StockPage() {
         </header>
 
         <div className="flex flex-1 flex-col">
+
+          <div className="flex items-center gap-4 p-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/dashboard")}
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-2xl font-bold text-gray-800"> Stock</h1>
+
+            <div className="flex justify-end w-full">
+              <Button
+                onClick={handleExcelReport}
+                disabled={loading}
+                className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+              >
+                <FileSpreadsheet className="h-4 w-4" />
+                Export Excel
+              </Button>
+            </div>
+          </div>
+
           <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4">
             {/* Container: Grid on mobile, Flex on Desktop */}
             <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:gap-4">
@@ -244,10 +326,10 @@ export default function StockPage() {
                     <div className="text-center">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${medicine.stock_quantity < 50
-                            ? "bg-red-100 text-red-800"
-                            : medicine.stock_quantity < 100
-                              ? "bg-yellow-100 text-yellow-800"
-                              : "bg-green-100 text-green-800"
+                          ? "bg-red-100 text-red-800"
+                          : medicine.stock_quantity < 100
+                            ? "bg-yellow-100 text-yellow-800"
+                            : "bg-green-100 text-green-800"
                           }`}
                       >
                         {medicine.stock_quantity}
@@ -307,10 +389,10 @@ export default function StockPage() {
                         <span className="text-gray-500">Quantity:</span>
                         <span
                           className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${medicine.stock_quantity < 50
-                              ? "bg-red-100 text-red-800"
-                              : medicine.stock_quantity < 100
-                                ? "bg-yellow-100 text-yellow-800"
-                                : "bg-green-100 text-green-800"
+                            ? "bg-red-100 text-red-800"
+                            : medicine.stock_quantity < 100
+                              ? "bg-yellow-100 text-yellow-800"
+                              : "bg-green-100 text-green-800"
                             }`}
                         >
                           {medicine.stock_quantity}
@@ -370,6 +452,7 @@ export default function StockPage() {
           onPurchaseReturn={handlePurchaseReturn}
           onUpdate={handleUpdate}
         />
+        
       </SidebarInset>
     </SidebarProvider>
   );

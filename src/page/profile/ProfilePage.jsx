@@ -1,5 +1,5 @@
-import React, { useState } from "react"
-import { AppSidebar } from "@/components/AppSidebar"
+import React, { useEffect, useState } from "react";
+import { AppSidebar } from "@/components/AppSidebar";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -7,16 +7,26 @@ import {
   BreadcrumbList,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Separator } from "@/components/ui/separator"
-import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Camera, Edit, Key } from "lucide-react"
+} from "@/components/ui/breadcrumb";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Camera, Edit, Key } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -25,94 +35,139 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
-  const [isEditing, setIsEditing] = useState(false)
+
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  useEffect(() => {
+    if (!token) {
+    navigate("/login");
+    return;
+  }
+
+    const fetchProfileDetails = async () => {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(res.data.data);
+      setProfileData(res.data.data);
+    };
+
+    fetchProfileDetails();
+  }, [token,navigate]);
+
+  const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
-    firstName: "John",
-    lastName: "Doe",
-    phoneNo: "+1 (555) 123-4567",
+    first_name: "John",
+    last_name: "Doe",
+    contact_number: "+1 (555) 123-4567",
     email: "john.doe@pharmaDesk.com", // Non-editable
-    dob: "1990-05-15",
+    date_of_birth: "1990-05-15",
     address: "123 Main Street, City, State 12345",
-    aadharNo: "1234 5678 9012",
-    panCard: "ABCDE1234F",
-    accountNo: "1234567890123456",
+    aadhar_card_no: "1234 5678 9012",
+    pan_card_no: "ABCDE1234F",
+    account_no: "1234567890123456",
     salary: "$75,000", // Non-editable
     role: "Senior Pharmacist", // Non-editable
-    profileImg: "/placeholder.svg?height=150&width=150",
-  })
+    profile_photo: "/placeholder.svg?height=150&width=150",
+  });
 
-  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false)
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
-  })
+  });
   const [passwordErrors, setPasswordErrors] = useState({
     currentPassword: "",
     newPassword: "",
     confirmPassword: "",
     general: "",
-  })
+  });
 
   const handleInputChange = (field, value) => {
     setProfileData((prev) => ({
       ...prev,
       [field]: value,
-    }))
-  }
+    }));
+  };
 
-  const handleSave = () => {
-    setIsEditing(false)
-    // Here you would typically save to backend
-    console.log("Profile updated:", profileData)
-  }
+  const handleSave = async () => {
+    try {
+      const res = await axios.put(
+        `${import.meta.env.VITE_BACKEND_URL}/profile`,
+        profileData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setProfileData(res.data.profile);
+    } catch (error) {
+      console.log("Error from the server ", error);
+    } finally {
+      setIsEditing(false);
+    }
+
+    console.log("Profile updated:", profileData);
+  };
 
   const handleCancel = () => {
-    setIsEditing(false)
+    setIsEditing(false);
     // Reset to original data if needed
-  }
+  };
 
   const validatePassword = (password) => {
-    const minLength = 8
-    const hasUpperCase = /[A-Z]/.test(password)
-    const hasLowerCase = /[a-z]/.test(password)
-    const hasNumbers = /\d/.test(password)
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    const minLength = 8;
+    const hasUpperCase = /[A-Z]/.test(password);
+    const hasLowerCase = /[a-z]/.test(password);
+    const hasNumbers = /\d/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
 
     if (password.length < minLength) {
-      return "Password must be at least 8 characters long"
+      return "Password must be at least 8 characters long";
     }
     if (!hasUpperCase) {
-      return "Password must contain at least one uppercase letter"
+      return "Password must contain at least one uppercase letter";
     }
     if (!hasLowerCase) {
-      return "Password must contain at least one lowercase letter"
+      return "Password must contain at least one lowercase letter";
     }
     if (!hasNumbers) {
-      return "Password must contain at least one number"
+      return "Password must contain at least one number";
     }
     if (!hasSpecialChar) {
-      return "Password must contain at least one special character"
+      return "Password must contain at least one special character";
     }
-    return ""
-  }
+    return "";
+  };
 
   const handlePasswordChange = (field, value) => {
     setPasswordData((prev) => ({
       ...prev,
       [field]: value,
-    }))
+    }));
 
     // Clear errors when user starts typing
     setPasswordErrors((prev) => ({
       ...prev,
       [field]: "",
       general: "",
-    }))
-  }
+    }));
+  };
 
   const handlePasswordSubmit = async () => {
     const errors = {
@@ -120,74 +175,85 @@ export default function ProfilePage() {
       newPassword: "",
       confirmPassword: "",
       general: "",
-    }
+    };
 
     // Validate current password
     if (!passwordData.currentPassword) {
-      errors.currentPassword = "Current password is required"
+      errors.currentPassword = "Current password is required";
     }
 
     // Validate new password
-    const newPasswordError = validatePassword(passwordData.newPassword)
+    const newPasswordError = validatePassword(passwordData.newPassword);
     if (newPasswordError) {
-      errors.newPassword = newPasswordError
+      errors.newPassword = newPasswordError;
     }
 
     // Validate confirm password
     if (passwordData.newPassword !== passwordData.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match"
+      errors.confirmPassword = "Passwords do not match";
     }
 
     // Check if new password is same as current
     if (passwordData.currentPassword === passwordData.newPassword) {
-      errors.newPassword = "New password must be different from current password"
+      errors.newPassword =
+        "New password must be different from current password";
     }
 
-    setPasswordErrors(errors)
+    setPasswordErrors(errors);
 
     // If no errors, proceed with password change
     if (!Object.values(errors).some((error) => error)) {
       try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        const res = await axios.put(
+          `${import.meta.env.VITE_BACKEND_URL}/profile/changePassword`,
+          passwordData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
-        // Here you would typically make an API call to change password
-        console.log("Password changed successfully")
+        if(res.status == 200){
+          localStorage.removeItem("token");
+        }
+
+        console.log("Password changed successfully");
 
         // Reset form and close dialog
         setPasswordData({
           currentPassword: "",
           newPassword: "",
           confirmPassword: "",
-        })
-        setIsPasswordDialogOpen(false)
+        });
+        setIsPasswordDialogOpen(false);
 
         // Show success message (you could use a toast here)
-        alert("Password changed successfully!")
+        alert("Password changed successfully!");
       } catch (error) {
         setPasswordErrors((prev) => ({
           ...prev,
           general: "Failed to change password. Please try again.",
           error,
-        }))
+        }));
       }
     }
-  }
+  };
 
   const handlePasswordCancel = () => {
     setPasswordData({
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
-    })
+    });
     setPasswordErrors({
       currentPassword: "",
       newPassword: "",
       confirmPassword: "",
       general: "",
-    })
-    setIsPasswordDialogOpen(false)
-  }
+    });
+    setIsPasswordDialogOpen(false);
+  };
 
   return (
     <SidebarProvider>
@@ -220,10 +286,13 @@ export default function ProfilePage() {
               {/* Profile Image */}
               <div className="relative">
                 <Avatar className="w-32 h-32">
-                  <AvatarImage src={profileData.profileImg || "/placeholder.svg"} alt="Profile" />
+                  <AvatarImage
+                    src={profileData.profileImg || "/placeholder.svg"}
+                    alt="Profile"
+                  />
                   <AvatarFallback className="text-2xl bg-linear-to-br from-cyan-500 to-teal-600 text-white">
-                    {profileData.firstName[0]}
-                    {profileData.lastName[0]}
+                    {profileData.first_name}
+                    {profileData.last_name}
                   </AvatarFallback>
                 </Avatar>
                 {isEditing && (
@@ -236,9 +305,11 @@ export default function ProfilePage() {
               {/* Profile Info */}
               <div className="text-center md:text-left">
                 <h1 className="text-3xl font-bold text-gray-800">
-                  {profileData.firstName} {profileData.lastName}
+                  {profileData.first_name} {profileData.last_name}
                 </h1>
-                <p className="text-lg text-cyan-600 font-medium">{profileData.role}</p>
+                <p className="text-lg text-cyan-600 font-medium">
+                  {profileData.role}
+                </p>
                 <p className="text-gray-600">{profileData.email}</p>
               </div>
 
@@ -253,7 +324,10 @@ export default function ProfilePage() {
                       <Edit className="w-4 h-4 mr-2" />
                       Edit Profile
                     </Button>
-                    <Dialog open={isPasswordDialogOpen} onOpenChange={setIsPasswordDialogOpen}>
+                    <Dialog
+                      open={isPasswordDialogOpen}
+                      onOpenChange={setIsPasswordDialogOpen}
+                    >
                       <DialogTrigger asChild>
                         <Button
                           variant="outline"
@@ -265,31 +339,49 @@ export default function ProfilePage() {
                       </DialogTrigger>
                       <DialogContent className="sm:max-w-md">
                         <DialogHeader>
-                          <DialogTitle className="text-blue-700">Change Password</DialogTitle>
+                          <DialogTitle className="text-blue-700">
+                            Change Password
+                          </DialogTitle>
                           <DialogDescription>
-                            Enter your current password and choose a new secure password.
+                            Enter your current password and choose a new secure
+                            password.
                           </DialogDescription>
                         </DialogHeader>
 
                         <div className="space-y-4 py-4">
                           {passwordErrors.general && (
                             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
-                              <p className="text-red-600 text-sm">{passwordErrors.general}</p>
+                              <p className="text-red-600 text-sm">
+                                {passwordErrors.general}
+                              </p>
                             </div>
                           )}
 
                           <div className="space-y-2">
-                            <Label htmlFor="currentPassword">Current Password</Label>
+                            <Label htmlFor="currentPassword">
+                              Current Password
+                            </Label>
                             <Input
                               id="currentPassword"
                               type="password"
                               value={passwordData.currentPassword}
-                              onChange={(e) => handlePasswordChange("currentPassword", e.target.value)}
-                              className={passwordErrors.currentPassword ? "border-red-500" : ""}
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  "currentPassword",
+                                  e.target.value
+                                )
+                              }
+                              className={
+                                passwordErrors.currentPassword
+                                  ? "border-red-500"
+                                  : ""
+                              }
                               placeholder="Enter current password"
                             />
                             {passwordErrors.currentPassword && (
-                              <p className="text-red-500 text-sm">{passwordErrors.currentPassword}</p>
+                              <p className="text-red-500 text-sm">
+                                {passwordErrors.currentPassword}
+                              </p>
                             )}
                           </div>
 
@@ -299,12 +391,23 @@ export default function ProfilePage() {
                               id="newPassword"
                               type="password"
                               value={passwordData.newPassword}
-                              onChange={(e) => handlePasswordChange("newPassword", e.target.value)}
-                              className={passwordErrors.newPassword ? "border-red-500" : ""}
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  "newPassword",
+                                  e.target.value
+                                )
+                              }
+                              className={
+                                passwordErrors.newPassword
+                                  ? "border-red-500"
+                                  : ""
+                              }
                               placeholder="Enter new password"
                             />
                             {passwordErrors.newPassword && (
-                              <p className="text-red-500 text-sm">{passwordErrors.newPassword}</p>
+                              <p className="text-red-500 text-sm">
+                                {passwordErrors.newPassword}
+                              </p>
                             )}
                             <div className="text-xs text-gray-500 space-y-1">
                               <p>Password must contain:</p>
@@ -319,26 +422,45 @@ export default function ProfilePage() {
                           </div>
 
                           <div className="space-y-2">
-                            <Label htmlFor="confirmPassword">Confirm New Password</Label>
+                            <Label htmlFor="confirmPassword">
+                              Confirm New Password
+                            </Label>
                             <Input
                               id="confirmPassword"
                               type="password"
                               value={passwordData.confirmPassword}
-                              onChange={(e) => handlePasswordChange("confirmPassword", e.target.value)}
-                              className={passwordErrors.confirmPassword ? "border-red-500" : ""}
+                              onChange={(e) =>
+                                handlePasswordChange(
+                                  "confirmPassword",
+                                  e.target.value
+                                )
+                              }
+                              className={
+                                passwordErrors.confirmPassword
+                                  ? "border-red-500"
+                                  : ""
+                              }
                               placeholder="Confirm new password"
                             />
                             {passwordErrors.confirmPassword && (
-                              <p className="text-red-500 text-sm">{passwordErrors.confirmPassword}</p>
+                              <p className="text-red-500 text-sm">
+                                {passwordErrors.confirmPassword}
+                              </p>
                             )}
                           </div>
                         </div>
 
                         <DialogFooter className="gap-2">
-                          <Button variant="outline" onClick={handlePasswordCancel}>
+                          <Button
+                            variant="outline"
+                            onClick={handlePasswordCancel}
+                          >
                             Cancel
                           </Button>
-                          <Button onClick={handlePasswordSubmit} className="bg-blue-600 hover:bg-blue-700 text-white">
+                          <Button
+                            onClick={handlePasswordSubmit}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                          >
                             Change Password
                           </Button>
                         </DialogFooter>
@@ -367,7 +489,9 @@ export default function ProfilePage() {
             <CardHeader>
               <CardTitle>Personal Information</CardTitle>
               <CardDescription>
-                {isEditing ? "Edit your personal details below" : "View your personal information"}
+                {isEditing
+                  ? "Edit your personal details below"
+                  : "View your personal information"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -377,8 +501,10 @@ export default function ProfilePage() {
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
                     id="firstName"
-                    value={profileData.firstName}
-                    onChange={(e) => handleInputChange("firstName", e.target.value)}
+                    value={profileData.first_name}
+                    onChange={(e) =>
+                      handleInputChange("first_name", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
@@ -387,8 +513,10 @@ export default function ProfilePage() {
                   <Label htmlFor="lastName">Last Name</Label>
                   <Input
                     id="lastName"
-                    value={profileData.lastName}
-                    onChange={(e) => handleInputChange("lastName", e.target.value)}
+                    value={profileData.last_name}
+                    onChange={(e) =>
+                      handleInputChange("last_name", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
@@ -400,16 +528,25 @@ export default function ProfilePage() {
                   <Label htmlFor="phoneNo">Phone Number</Label>
                   <Input
                     id="phoneNo"
-                    value={profileData.phoneNo}
-                    onChange={(e) => handleInputChange("phoneNo", e.target.value)}
+                    value={profileData.contact_number}
+                    onChange={(e) =>
+                      handleInputChange("contact_number", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
-                  <Input id="email" value={profileData.email} disabled className="bg-gray-100 text-gray-500" />
-                  <p className="text-xs text-gray-500">Email cannot be changed</p>
+                  <Input
+                    id="email"
+                    value={profileData.email}
+                    disabled
+                    className="bg-gray-100 text-gray-500"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Email cannot be changed
+                  </p>
                 </div>
               </div>
 
@@ -419,16 +556,29 @@ export default function ProfilePage() {
                   <Input
                     id="dob"
                     type="date"
-                    value={profileData.dob}
-                    onChange={(e) => handleInputChange("dob", e.target.value)}
+                    value={
+                      profileData.date_of_birth
+                        ? profileData.date_of_birth.split("T")[0]
+                        : ""
+                    }
+                    onChange={(e) =>
+                      handleInputChange("date_of_birth", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="role">Role</Label>
-                  <Input id="role" value={profileData.role} disabled className="bg-gray-100 text-gray-500" />
-                  <p className="text-xs text-gray-500">Role cannot be changed</p>
+                  <Input
+                    id="role"
+                    value={profileData.role}
+                    disabled
+                    className="bg-gray-100 text-gray-500"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Role cannot be changed
+                  </p>
                 </div>
               </div>
 
@@ -446,15 +596,19 @@ export default function ProfilePage() {
 
               {/* Financial Information */}
               <Separator />
-              <h3 className="text-lg font-semibold text-gray-800">Financial Information</h3>
+              <h3 className="text-lg font-semibold text-gray-800">
+                Financial Information
+              </h3>
 
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <Label htmlFor="aadharNo">Aadhar Number</Label>
                   <Input
                     id="aadharNo"
-                    value={profileData.aadharNo}
-                    onChange={(e) => handleInputChange("aadharNo", e.target.value)}
+                    value={profileData.aadhar_card_no}
+                    onChange={(e) =>
+                      handleInputChange("aadhar_card_no", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
@@ -463,8 +617,10 @@ export default function ProfilePage() {
                   <Label htmlFor="panCard">PAN Card</Label>
                   <Input
                     id="panCard"
-                    value={profileData.panCard}
-                    onChange={(e) => handleInputChange("panCard", e.target.value)}
+                    value={profileData.pan_card_no}
+                    onChange={(e) =>
+                      handleInputChange("pan_card_no", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
@@ -476,16 +632,25 @@ export default function ProfilePage() {
                   <Label htmlFor="accountNo">Account Number</Label>
                   <Input
                     id="accountNo"
-                    value={profileData.accountNo}
-                    onChange={(e) => handleInputChange("accountNo", e.target.value)}
+                    value={profileData.account_no}
+                    onChange={(e) =>
+                      handleInputChange("account_no", e.target.value)
+                    }
                     disabled={!isEditing}
                     className={!isEditing ? "bg-gray-50" : ""}
                   />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="salary">Salary</Label>
-                  <Input id="salary" value={profileData.salary} disabled className="bg-gray-100 text-gray-500" />
-                  <p className="text-xs text-gray-500">Salary cannot be changed</p>
+                  <Input
+                    id="salary"
+                    value={profileData.salary}
+                    disabled
+                    className="bg-gray-100 text-gray-500"
+                  />
+                  <p className="text-xs text-gray-500">
+                    Salary cannot be changed
+                  </p>
                 </div>
               </div>
             </CardContent>
@@ -493,5 +658,5 @@ export default function ProfilePage() {
         </div>
       </SidebarInset>
     </SidebarProvider>
-  )
+  );
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
-import { SalesDetailsDialog } from "./SalesDetailsDialog";
+import { SalesDetailsDialog } from "./SalesDetailsDialog"; // Ensure this is the updated one from previous step
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { downloadAsExcel } from "@/lib/download-utils"
 
 export default function SalesReportPage() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ export default function SalesReportPage() {
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
+  // 1. Fetch Main List
   useEffect(() => {
     const fetchSales = async () => {
       setLoading(true);
@@ -52,7 +54,6 @@ export default function SalesReportPage() {
             },
           }
         );
-
         if (res.data && res.data.status === "success") {
           const formattedSales = res.data.data.map((sale, index) => ({
             ...sale,
@@ -71,57 +72,23 @@ export default function SalesReportPage() {
     fetchSales();
   }, []);
 
-  useEffect(() => {
-    const fetchSaleByID = async () => {
-      try {
-        if (!isViewModalOpen || !selectedSale) return;
-
-        const res = await axios.get(
-          `${import.meta.env.VITE_BACKEND_URL}/admin/sales/${
-            selectedSale.sale_id
-          }`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (res.data && res.data.status === "success") {
-          setSelectedSale(res.data.data);
-        }
-      } catch (error) {
-        console.log("Failed to Fetch Sale Details", error);
-      }
-    };
-
-    fetchSaleByID();
-  }, [selectedSale, isViewModalOpen]);
+  // --- DELETE THE fetchSaleByID useEffect HERE --- 
+  // It was causing the infinite loop. The Dialog handles fetching now.
 
   const handleExcelReport = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.get(
+    try{
+      const token = localStorage.getItem("token");
+      const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/admin/export/excel?table=sales`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
-          responseType: "blob",
         }
       );
-
-      const url = window.URL.createObjectURL(new Blob([response.data]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", "sales_report.xlsx");
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-    } catch (error) {
-      console.error("Failed to export sales to Excel:", error);
-    } finally {
-      setLoading(false);
+      downloadAsExcel(res.data.data, "sales_report");
+    } catch (err) {
+      console.error("Error fetching Excel report:", err);
     }
   };
 
@@ -178,9 +145,10 @@ export default function SalesReportPage() {
     }
   };
 
+  // Simplified Handler
   const handleViewSale = (sale) => {
-    setSelectedSale(sale);
-    setIsViewModalOpen(true);
+    setSelectedSale(sale); // Just set the object you have
+    setIsViewModalOpen(true); // Open modal (Modal will fetch details if needed)
   };
 
   const handleCloseModal = () => {
@@ -234,7 +202,7 @@ export default function SalesReportPage() {
     const colors = {
       Cash: "bg-yellow-100 text-yellow-800",
       UPI: "bg-blue-100 text-blue-800",
-      Card: "bg-green-100 text-green-800",
+      Credit: "bg-green-100 text-green-800",
       "Credit Card": "bg-green-100 text-green-800",
     };
     return colors[method] || "bg-gray-100 text-gray-800";
