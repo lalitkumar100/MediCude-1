@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Package, Warehouse, TrendingUp, Users, AlertCircle } from "lucide-react";
 import axios from "axios";
-
+import loaderGif from "@/components/logoloader.gif";
 export default function DashboardPage() {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
@@ -45,7 +45,8 @@ export default function DashboardPage() {
           navigate("/login", { replace: true });
         }
       } finally {
-        setIsLoading(false);
+        setTimeout(() => setIsLoading(false), 2000) // simulate loading delay for better UX
+       
       }
     };
 
@@ -55,12 +56,18 @@ export default function DashboardPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="flex flex-1 items-center justify-center">
-        <div className="text-center">
-          <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-cyan-600 border-r-transparent"></div>
-          <p className="mt-2 text-sm text-muted-foreground">Loading dashboard...</p>
-        </div>
-      </div>
+      <div className="flex flex-1  bg-cyan-50 items-center justify-center">
+  <div className="text-center bg-cyan-50 ">
+    <img
+      src={loaderGif}
+      alt="Loading"
+      className="h-36 w-36 mx-auto"
+    />
+     <p className="mt-3 text-sm font-semibold tracking-wide text-teal-600 animate-pulse">
+      Loading dashboard, please wait…
+    </p>
+  </div>
+</div>
     );
   }
 

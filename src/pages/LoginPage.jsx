@@ -4,11 +4,16 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Mail, Lock, ArrowRight } from "lucide-react";
+import panelGif from "../../public/assets/logo.png";
 
-// Array of images for the slideshow
 const images = [
-  "/img3.png", 
-  "/img4.png"
+  "/img1.png", 
+  "/img5.png", 
+  "/img2.png", 
+  "/img6.png", 
+  "/img4.png", 
+  "/img3.png"
 ];
 
 export default function LoginPage() {
@@ -17,11 +22,8 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
-  // Slideshow State
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  // Effect for the 3-second image rotation
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => 
@@ -42,15 +44,14 @@ export default function LoginPage() {
         email,
         password,
       });
-     console.log("Login successful:", response.data);
+      console.log("Login successful:", response.data);
       localStorage.setItem("token", response.data.token);
       if(response.data.role === "worker"){
-      navigate("/worker");
+        navigate("/worker");
       }
       else{
-        navigate("/dashboard");
+        navigate("/admin/dashboard");
       }
-      
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.message || "Network error");
@@ -60,9 +61,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row overflow-hidden">
-      {/* Left Section - Image Slideshow */}
-      <div className="hidden md:block md:w-1/2 relative h-screen bg-gray-200">
+    <div className="min-h-screen flex flex-col md:flex-row overflow-hidden bg-gradient-to-br from-cyan-50 via-white to-teal-50">
+      {/* Left Section - Enhanced Image Slideshow */}
+      <div className="hidden md:block md:w-1/2 relative h-screen bg-gradient-to-br from-cyan-900 to-teal-800">
         {images.map((img, index) => (
           <img
             key={index}
@@ -73,77 +74,168 @@ export default function LoginPage() {
             }`}
           />
         ))}
-        {/* Overlay for better text/logo visibility */}
-        <div className="absolute inset-0 bg-gradient-to-r from-cyan-900/40 to-transparent"></div>
         
-        {/* Branding on top of image (Optional) */}
-        <div className="absolute bottom-12 left-12 text-white z-10">
-          <h2 className="text-4xl font-bold">PharmaDesk</h2>
-          <p className="text-lg opacity-80">AI integrated Managing Tool for your Pharmacy</p>
+        {/* Enhanced Overlay with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-cyan-900/70 via-cyan-800/50 to-teal-900/70"></div>
+        
+        {/* Animated dots decoration */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-20 w-72 h-72 bg-cyan-400/10 rounded-full blur-3xl animate-pulse"></div>
+          <div className="absolute bottom-20 right-20 w-96 h-96 bg-teal-400/10 rounded-full blur-3xl animate-pulse" style={{animationDelay: '700ms'}}></div>
+        </div>
+        
+        {/* Enhanced Branding */}
+        <div className="absolute bottom-12 left-12 text-white z-10 space-y-4">
+          <div className="space-y-2">
+            <h2 className="text-5xl font-bold tracking-tight bg-gradient-to-r from-white to-cyan-200 bg-clip-text text-transparent">
+              MediCude
+            </h2>
+            <div className="h-1 w-24 bg-gradient-to-r from-cyan-400 to-teal-400 rounded-full"></div>
+          </div>
+          <p className="text-xl text-cyan-100 font-light max-w-md">
+            AI integrated Managing Tool for your Pharmacy
+          </p>
+          <div className="flex items-center gap-3 text-cyan-200 text-sm">
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
+              <span>Secure</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-teal-400 rounded-full animate-pulse" style={{animationDelay: '300ms'}}></div>
+              <span>Efficient</span>
+            </div>
+            <div className="flex items-center gap-1">
+              <div className="w-2 h-2 bg-cyan-300 rounded-full animate-pulse" style={{animationDelay: '500ms'}}></div>
+              <span>Intelligent</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Slideshow indicators */}
+        <div className="absolute bottom-8 right-12 flex gap-2 z-10">
+          {images.map((_, index) => (
+            <div
+              key={index}
+              className={`h-1.5 rounded-full transition-all duration-300 ${
+                index === currentImageIndex 
+                  ? "w-8 bg-cyan-400" 
+                  : "w-1.5 bg-white/40"
+              }`}
+            ></div>
+          ))}
         </div>
       </div>
 
-      {/* Right Section - Login Form */}
-      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-8 md:p-12 h-screen overflow-y-auto">
-        <div className="w-full max-w-md space-y-8">
-          <div className="text-center">
-            <div className="mx-auto w-16 h-16 bg-gradient-to-br from-cyan-500 to-teal-600 rounded-2xl flex items-center justify-center mb-4 shadow-lg">
-              <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-              </svg>
+      {/* Right Section - Enhanced Login Form */}
+      <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-8 md:p-12 h-screen overflow-y-auto relative">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-100/50 to-transparent rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-teal-100/50 to-transparent rounded-full blur-3xl"></div>
+        
+        <div className="w-full max-w-md space-y-8 relative z-10">
+          {/* Logo and Header */}
+          <div className="text-center space-y-4">
+            <div className="mx-auto w-20 h-20 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 hover:scale-105">
+              <img
+                src={panelGif}
+                alt="Logo"
+                className="w-16 h-16"
+              />
             </div>
-            <h1 className="text-3xl font-bold text-gray-900">Welcome Back</h1>
-            <p className="text-gray-500 mt-2">Please enter your details to login</p>
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-cyan-600 to-teal-600 bg-clip-text text-transparent">
+                Welcome Back
+              </h1>
+              <p className="text-gray-500">Please enter your details to continue</p>
+            </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5 mt-8">
+          {/* Login Form */}
+          <form onSubmit={handleSubmit} className="space-y-6 mt-8">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="name@company.com"
-                className="h-11 focus:ring-2 focus:ring-cyan-500"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <Label htmlFor="email" className="text-gray-700 font-medium">Email</Label>
+              <div className="relative group">
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-cyan-500 transition-colors" />
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@company.com"
+                  className="h-12 pl-11 border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl transition-all"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
             </div>
 
             <div className="space-y-2">
-              <div className="flex justify-between">
-                <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-xs text-cyan-600 hover:underline">Forgot?</a>
+              <div className="flex justify-between items-center">
+                <Label htmlFor="password" className="text-gray-700 font-medium">Password</Label>
+                <a href="#" className="text-xs text-cyan-600 hover:text-cyan-700 font-medium hover:underline transition-colors">
+                  Forgot Password?
+                </a>
               </div>
-              <Input
-                id="password"
-                type="password"
-                placeholder="••••••••"
-                className="h-11 focus:ring-2 focus:ring-cyan-500"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
+              <div className="relative group">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-cyan-500 transition-colors" />
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="••••••••"
+                  className="h-12 pl-11 border-gray-200 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 rounded-xl transition-all"
+                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
             </div>
 
             <Button
               type="submit"
-              className="w-full h-11 bg-cyan-600 hover:bg-cyan-700 text-white transition-all shadow-md"
+              className="w-full h-12 bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white font-medium rounded-xl transition-all shadow-lg shadow-cyan-500/30 hover:shadow-xl hover:shadow-cyan-500/40 hover:scale-[1.02] active:scale-[0.98] group"
               disabled={loading}
             >
-              {loading ? "Verifying..." : "Sign In"}
+              {loading ? (
+                <span className="flex items-center gap-2">
+                  <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                  Verifying...
+                </span>
+              ) : (
+                <span className="flex items-center justify-center gap-2">
+                  Sign In
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </span>
+              )}
             </Button>
 
             {error && (
-              <div className="p-3 text-sm text-red-500 bg-red-50 rounded-lg text-center border border-red-100">
+              <div className="p-4 text-sm text-red-600 bg-red-50 rounded-xl text-center border border-red-100">
                 {error}
               </div>
             )}
           </form>
 
-          <p className="text-center text-sm text-gray-500">
-            Don't have an account? <span className="text-cyan-600 font-medium cursor-pointer">Contact Admin</span>
-          </p>
+          {/* Footer */}
+          <div className="space-y-4 pt-6 border-t border-gray-100">
+            <p className="text-center text-sm text-gray-600">
+              Don't have an account?{" "}
+              <span className="text-cyan-600 font-semibold cursor-pointer hover:text-cyan-700 transition-colors hover:underline">
+                Contact Admin
+              </span>
+            </p>
+            
+            {/* Trust badges */}
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
+              <div className="flex items-center gap-1">
+                <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
+                <span>Secure Login</span>
+              </div>
+              <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
+              <div className="flex items-center gap-1">
+                <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>
+                <span>256-bit Encryption</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>

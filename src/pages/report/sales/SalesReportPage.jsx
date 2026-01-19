@@ -1,13 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { AppSidebar } from "@/components/AppSidebar";
-import { SalesDetailsDialog } from "./SalesDetailsDialog"; // Ensure this is the updated one from previous step
-import PageBreadcrumb from "@/components/PageBreadcrumb";
+import { SalesDetailsDialog } from "./SalesDetailsDialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
 import {
   Select,
   SelectContent,
@@ -26,7 +20,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { downloadAsExcel } from "@/lib/download-utils"
+import { downloadAsExcel } from "@/lib/download-utils";
 
 export default function SalesReportPage() {
   const navigate = useNavigate();
@@ -34,14 +28,14 @@ export default function SalesReportPage() {
   const [sales, setSales] = useState([]);
   const [sortBy, setSortBy] = useState("date-desc");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  const itemsPerPage = 15; // Changed to 15 items per page
   const [totalSales, setTotalSales] = useState(0);
   const [selectedSale, setSelectedSale] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const token = localStorage.getItem("token");
 
-  // 1. Fetch Main List
+  // Fetch Main List
   useEffect(() => {
     const fetchSales = async () => {
       setLoading(true);
@@ -72,11 +66,9 @@ export default function SalesReportPage() {
     fetchSales();
   }, []);
 
-  // --- DELETE THE fetchSaleByID useEffect HERE --- 
-  // It was causing the infinite loop. The Dialog handles fetching now.
-
   const handleExcelReport = async () => {
-    try{
+    try {
+      setLoading(true);
       const token = localStorage.getItem("token");
       const res = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/admin/export/excel?table=sales`,
@@ -89,6 +81,8 @@ export default function SalesReportPage() {
       downloadAsExcel(res.data.data, "sales_report");
     } catch (err) {
       console.error("Error fetching Excel report:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,6 +125,7 @@ export default function SalesReportPage() {
 
   const clearSearch = () => {
     setSearchTerm("");
+    setCurrentPage(1);
   };
 
   const handlePrevPage = () => {
@@ -145,10 +140,9 @@ export default function SalesReportPage() {
     }
   };
 
-  // Simplified Handler
   const handleViewSale = (sale) => {
-    setSelectedSale(sale); // Just set the object you have
-    setIsViewModalOpen(true); // Open modal (Modal will fetch details if needed)
+    setSelectedSale(sale);
+    setIsViewModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -156,47 +150,7 @@ export default function SalesReportPage() {
     setIsViewModalOpen(false);
   };
 
-  const handleDeleteSale = async (sale) => {
-    if (!window.confirm("Are you sure you want to delete this sale?")) {
-      return;
-    }
 
-    setLoading(true);
-    try {
-      await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/admin/sales/${sale.sale_id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      // Refresh the sales list
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/admin/sales`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (res.data && res.data.status === "success") {
-        const formattedSales = res.data.data.map((sale, index) => ({
-          ...sale,
-          sale_id: sale.sale_id || index + 1,
-        }));
-        setSales(formattedSales);
-        setTotalSales(formattedSales.length);
-      }
-    } catch (error) {
-      console.error("Failed to delete sale:", error);
-      alert("Failed to delete sale. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const getPaymentMethodColor = (method) => {
     const colors = {
@@ -209,216 +163,186 @@ export default function SalesReportPage() {
   };
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "Reports", href: "/report" },
-              { label: "Sales Reports", href: "/sales" },
-            ]}
-            currentPage="Sales Reports"
-          />
-        </header>
-
-        {/* Main Content */}
-        <div className="flex flex-1 flex-col">
-          {/* Back Button and Title */}
-          <div className="flex items-center justify-between p-4">
-            <div className="flex items-center gap-4">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/report")}
-                aria-label="Go back"
-              >
-                <ArrowLeft className="h-5 w-5" />
-              </Button>
-              <h1 className="text-2xl font-bold text-gray-800">Sales List</h1>
-            </div>
+    <>
+      {/* Main Content */}
+      <div className="flex flex-1 flex-col min-h-screen bg-gray-50">
+        {/* Back Button and Title */}
+        <div className="flex items-center justify-between gap-4 p-4 bg-white border-b">
+          <div className="flex items-center gap-4">
             <Button
-              onClick={handleExcelReport}
-              disabled={loading}
-              className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate("/admin/report")}
+              aria-label="Go back"
             >
-              <FileSpreadsheet className="h-4 w-4" />
-              Export Excel
+              <ArrowLeft className="h-5 w-5 text-green-800 font-weight-800" />
             </Button>
+            <h1 className="text-2xl font-bold text-green-800">Sales List</h1>
           </div>
 
-          {/* Sticky Filter Bar */}
-          <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4">
-            <div className="grid grid-cols-1 gap-3 md:flex md:items-center md:gap-4">
-              {/* Search Input */}
-              <div className="relative w-full md:flex-1 md:max-w-md">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-                <Input
-                  type="text"
-                  placeholder="Search by sale no, employee, or customer..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-10 border-cyan-200 focus:border-cyan-500 w-full"
-                />
-                {searchTerm && (
-                  <button
-                    onClick={clearSearch}
-                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    <X className="h-4 w-4" />
-                  </button>
-                )}
-              </div>
+          <Button
+            onClick={handleExcelReport}
+            disabled={loading}
+            className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+          >
+            <FileSpreadsheet className="h-4 w-4" />
+            {loading ? "Exporting..." : "Export Excel"}
+          </Button>
+        </div>
 
-              {/* Sort Dropdown */}
-              <div className="w-full md:w-48">
-                <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-full border-cyan-200 focus:border-cyan-500">
-                    <SelectValue placeholder="Sort by..." />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="date-desc">Recent to Oldest</SelectItem>
-                    <SelectItem value="date-asc">Oldest to Recent</SelectItem>
-                    <SelectItem value="total-amount-low">
-                      Total Amount Low to High
-                    </SelectItem>
-                    <SelectItem value="total-amount-high">
-                      Total Amount High to Low
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-          </div>
-
-          {/* Sticky Table Header */}
-          <div className="sticky top-37 z-10 bg-linear-to-r from-cyan-50 to-teal-50 border-b border-cyan-200">
-            <div className="hidden md:grid grid-cols-7 gap-4 p-4 font-semibold text-teal-800">
-              <div className="text-center">S.No</div>
-              <div>Sale No</div>
-              <div>Employee</div>
-              <div className="text-center">Total Amount</div>
-              <div className="text-center">Payment</div>
-              <div className="text-center">Action</div>
-              <div className="text-center">Delete</div>
-            </div>
-            {/* Mobile Header */}
-            <div className="md:hidden p-4 font-semibold text-teal-800 text-center">
-              Sales List
-            </div>
-          </div>
-
-          {/* Scrollable Sales List */}
-          <div className="flex-1 max-h-[calc(100vh-250px)] overflow-y-auto">
-            {loading ? (
-              <div className="flex items-center justify-center h-32 text-gray-500">
-                Loading...
-              </div>
-            ) : currentSales.length > 0 ? (
-              currentSales.map((sale, index) => (
-                <div
-                  key={sale.sale_id}
-                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+        {/* Sticky Filter Bar */}
+        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4">
+          <div className="grid grid-cols-1 gap-3 md:flex md:items-center md:gap-4">
+            {/* Search Input */}
+            <div className="relative w-full md:flex-1 md:max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Input
+                type="text"
+                placeholder="Search by sale no, employee, or customer..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 pr-10 border-green-200 focus:border-green-500 w-full"
+              />
+              {searchTerm && (
+                <button
+                  onClick={clearSearch}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {/* Desktop View */}
-                  <div className="hidden md:grid grid-cols-7 gap-4 p-4">
-                    <div className="text-center text-gray-600">
-                      {startIndex + index + 1}
-                    </div>
-                    <div className="font-medium text-gray-800">
+                  <X className="h-4 w-4" />
+                </button>
+              )}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="w-full md:w-48">
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-full border-green-200 focus:border-green-500">
+                  <SelectValue placeholder="Sort by..." />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="date-desc">Recent to Oldest</SelectItem>
+                  <SelectItem value="date-asc">Oldest to Recent</SelectItem>
+                  <SelectItem value="total-amount-low">
+                    Total Amount Low to High
+                  </SelectItem>
+                  <SelectItem value="total-amount-high">
+                    Total Amount High to Low
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </div>
+
+        {/* Sticky Table Header */}
+        <div className="sticky top-[73px] z-10 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200">
+          <div className="hidden md:grid grid-cols-6 gap-4 p-4 font-semibold text-green-800">
+            <div className="text-center">S.No</div>
+            <div>Sale No</div>
+            <div>Employee</div>
+            <div className="text-center">Total Amount</div>
+            <div className="text-center">Payment</div>
+            <div className="text-center">Action</div>
+          </div>
+          {/* Mobile Header */}
+          <div className="md:hidden p-4 font-semibold text-green-800 text-center">
+            Sales List
+          </div>
+        </div>
+
+        {/* Sales List - No max-height, naturally scrollable */}
+        <div className="flex-1 bg-white">
+          {loading ? (
+            <div className="flex items-center justify-center h-32 text-gray-500">
+              Loading sales...
+            </div>
+          ) : currentSales.length > 0 ? (
+            currentSales.map((sale, index) => (
+              <div
+                key={sale.sale_id}
+                className="border-b border-gray-100 hover:bg-green-50 transition-colors"
+              >
+                {/* Desktop View */}
+                <div className="hidden md:grid grid-cols-6 gap-4 p-4">
+                  <div className="text-center text-gray-600">
+                    {startIndex + index + 1}
+                  </div>
+                  <div className="font-medium text-gray-800">
+                    {sale.sale_no}
+                  </div>
+                  <div className="text-gray-600">{sale.employee_name}</div>
+                  <div className="text-center font-semibold text-gray-800">
+                    ₹{parseFloat(sale.total_amount).toLocaleString("en-IN")}
+                  </div>
+                  <div className="text-center">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-medium ${getPaymentMethodColor(
+                        sale.payment_method
+                      )}`}
+                    >
+                      {sale.payment_method}
+                    </span>
+                  </div>
+                  <div className="text-center">
+                    <Button
+                      size="sm"
+                      className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 text-xs rounded"
+                      onClick={() => handleViewSale(sale)}
+                    >
+                      View
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Mobile View */}
+                <div className="md:hidden p-4 space-y-2">
+                  <div className="flex justify-between items-start">
+                    <h3 className="font-medium text-gray-800 text-sm">
                       {sale.sale_no}
+                    </h3>
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 text-xs rounded"
+                        onClick={() => handleViewSale(sale)}
+                      >
+                        View
+                      </Button>
+                     
                     </div>
-                    <div className="text-gray-600">{sale.employee_name}</div>
-                    <div className="text-center font-semibold text-gray-800">
-                      ₹{parseFloat(sale.total_amount).toLocaleString("en-IN")}
+                  </div>
+                  <p className="text-xs text-gray-600">{sale.employee_name}</p>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div>
+                      <span className="text-gray-500">Total:</span>
+                      <span className="ml-1 font-semibold">
+                        ₹{parseFloat(sale.total_amount).toLocaleString("en-IN")}
+                      </span>
                     </div>
-                    <div className="text-center">
+                    <div>
+                      <span className="text-gray-500">Payment:</span>
                       <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${getPaymentMethodColor(
+                        className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${getPaymentMethodColor(
                           sale.payment_method
                         )}`}
                       >
                         {sale.payment_method}
                       </span>
                     </div>
-                    <div className="text-center">
-                      <Button
-                        size="sm"
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-xs rounded"
-                        onClick={() => handleViewSale(sale)}
-                      >
-                        View
-                      </Button>
-                    </div>
-                    <div className="text-center">
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="bg-red-600 hover:bg-red-700 text-white p-2"
-                        onClick={() => handleDeleteSale(sale)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Mobile View */}
-                  <div className="md:hidden p-4 space-y-2">
-                    <div className="flex justify-between items-start">
-                      <h3 className="font-medium text-gray-800 text-sm">
-                        {sale.sale_no}
-                      </h3>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-xs rounded"
-                          onClick={() => handleViewSale(sale)}
-                        >
-                          View
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          className="bg-red-600 hover:bg-red-700 text-white p-1"
-                          onClick={() => handleDeleteSale(sale)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                    <p className="text-xs text-gray-600">{sale.employee_name}</p>
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div>
-                        <span className="text-gray-500">Total:</span>
-                        <span className="ml-1 font-semibold">
-                          ₹{parseFloat(sale.total_amount).toLocaleString("en-IN")}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-gray-500">Payment:</span>
-                        <span
-                          className={`ml-1 px-2 py-0.5 rounded-full text-xs font-medium ${getPaymentMethodColor(
-                            sale.payment_method
-                          )}`}
-                        >
-                          {sale.payment_method}
-                        </span>
-                      </div>
-                    </div>
                   </div>
                 </div>
-              ))
-            ) : (
-              <div className="flex items-center justify-center h-32 text-gray-500">
-                No sales found matching your criteria.
               </div>
-            )}
-          </div>
+            ))
+          ) : (
+            <div className="flex items-center justify-center h-32 text-gray-500">
+              No sales found matching your criteria.
+            </div>
+          )}
+        </div>
 
-          {/* Pagination Footer */}
-          <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+        {/* Non-sticky Pagination Footer - Only show if there are multiple pages */}
+        {sortedSales.length > itemsPerPage && (
+          <div className="bg-white border-t border-gray-200 p-4">
             <div className="flex items-center justify-center gap-4">
               <Button
                 variant="outline"
@@ -445,16 +369,15 @@ export default function SalesReportPage() {
               </Button>
             </div>
           </div>
-        </div>
+        )}
+      </div>
 
-        <SalesDetailsDialog
-          isOpen={isViewModalOpen}
-          onOpenChange={setIsViewModalOpen}
-          sale={selectedSale}
-          onDelete={handleDeleteSale}
-          onClose={handleCloseModal}
-        />
-      </SidebarInset>
-    </SidebarProvider>
+      <SalesDetailsDialog
+        isOpen={isViewModalOpen}
+        onOpenChange={setIsViewModalOpen}
+        sale={selectedSale}
+        onClose={handleCloseModal}
+      />
+    </>
   );
 }

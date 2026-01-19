@@ -1,13 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { AppSidebar } from "@/components/AppSidebar";
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,13 +11,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import Loader  from "@/components/loader";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Camera, Edit, Key } from "lucide-react";
+import { Camera, Edit, Key,ArrowLeft  } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -39,35 +26,33 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 export default function ProfilePage() {
 
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  
+  const [isLoading, setIsLoading] = useState(true);
+  
+  const [unauthorized, setUnauthorized] = useState(false);
 
-  useEffect(() => {
-    if (!token) {
-    navigate("/login");
-    return;
-  }
+  const token = localStorage.getItem("token"); // or from context/store
 
-    const fetchProfileDetails = async () => {
-      const res = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/profile`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+  const [loaderMessage, setLoaderMessage] = useState("Loading profile...");
+  
+  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
+  const [passwordData, setPasswordData] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [passwordErrors, setPasswordErrors] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+    general: "",
+  });
 
-      console.log(res.data.data);
-      setProfileData(res.data.data);
-    };
-
-    fetchProfileDetails();
-  }, [token,navigate]);
-
-  const [isEditing, setIsEditing] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
   const [profileData, setProfileData] = useState({
     first_name: "John",
     last_name: "Doe",
@@ -83,18 +68,86 @@ export default function ProfilePage() {
     profile_photo: "/placeholder.svg?height=150&width=150",
   });
 
-  const [isPasswordDialogOpen, setIsPasswordDialogOpen] = useState(false);
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-  });
-  const [passwordErrors, setPasswordErrors] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: "",
-    general: "",
-  });
+useEffect(() => {
+  let isMounted = true; // prevent state updates after unmount
+
+  if (!token) {
+    navigate("/login", { replace: true });
+    return;
+  }
+
+  const fetchProfileDetails = async () => {
+    setLoaderMessage("Loading profile...");
+    setIsLoading(true);
+
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/profile`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (isMounted) {
+        setProfileData(res.data.data);
+      }
+    } catch (error) {
+      if (error?.response?.status === 401) {
+        if (isMounted) {
+          setUnauthorized(true);
+        }
+
+        setTimeout(() => {
+          navigate("/login", { replace: true });
+        }, 2000);
+      } else {
+        console.error("Error fetching profile:", error);
+      }
+    } finally {
+      if (isMounted) {
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 3000);
+      }
+    }
+  };
+
+  fetchProfileDetails();
+
+  return () => {
+    isMounted = false;
+  };
+}, [token, navigate]);
+
+
+  // 🔄 Loader
+  if (isLoading) {
+    return (
+      <Loader message={loaderMessage} />
+    );
+  }
+
+  // ⛔ 401 Page
+  if (unauthorized) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-red-50">
+        <div className="text-center">
+          <h1 className="text-3xl font-bold text-red-600">401 – Unauthorized</h1>
+          <p className="mt-2 text-gray-700">
+            Please login first. Redirecting to login page…
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+
+
+
+
+
 
   const handleInputChange = (field, value) => {
     setProfileData((prev) => ({
@@ -105,6 +158,8 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
+      setLoaderMessage(" Saving profile...");
+      setIsLoading(true);
       const res = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/profile`,
         profileData,
@@ -114,12 +169,16 @@ export default function ProfilePage() {
           },
         }
       );
-
+       
       setProfileData(res.data.profile);
     } catch (error) {
       console.log("Error from the server ", error);
     } finally {
-      setIsEditing(false);
+      setTimeout(() => {
+        setIsLoading(false);
+        setIsEditing(false);
+      }, 3000);
+
     }
 
     console.log("Profile updated:", profileData);
@@ -131,28 +190,8 @@ export default function ProfilePage() {
   };
 
   const validatePassword = (password) => {
-    const minLength = 8;
-    const hasUpperCase = /[A-Z]/.test(password);
-    const hasLowerCase = /[a-z]/.test(password);
-    const hasNumbers = /\d/.test(password);
-    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-
-    if (password.length < minLength) {
-      return "Password must be at least 8 characters long";
-    }
-    if (!hasUpperCase) {
-      return "Password must contain at least one uppercase letter";
-    }
-    if (!hasLowerCase) {
-      return "Password must contain at least one lowercase letter";
-    }
-    if (!hasNumbers) {
-      return "Password must contain at least one number";
-    }
-    if (!hasSpecialChar) {
-      return "Password must contain at least one special character";
-    }
-    return "";
+    const minLength = 6;
+   return "";
   };
 
   const handlePasswordChange = (field, value) => {
@@ -204,6 +243,8 @@ export default function ProfilePage() {
     // If no errors, proceed with password change
     if (!Object.values(errors).some((error) => error)) {
       try {
+        setLoaderMessage(" Changing Password...");
+        setIsLoading(true);
         const res = await axios.put(
           `${import.meta.env.VITE_BACKEND_URL}/profile/changePassword`,
           passwordData,
@@ -218,7 +259,7 @@ export default function ProfilePage() {
           localStorage.removeItem("token");
         }
 
-        console.log("Password changed successfully");
+ 
 
         // Reset form and close dialog
         setPasswordData({
@@ -233,9 +274,14 @@ export default function ProfilePage() {
       } catch (error) {
         setPasswordErrors((prev) => ({
           ...prev,
-          general: "Failed to change password. Please try again.",
+          general: error.response?.data?.message ,
           error,
         }));
+      }
+      finally{
+        
+          setIsLoading(false);
+       
       }
     }
   };
@@ -261,8 +307,26 @@ export default function ProfilePage() {
 
         {/* Main Content */}
         <div className="flex flex-1 flex-col gap-4 p-0 pt-0">
+                      <div className="flex items-center justify-between gap-4 p-4 bg-white ">
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => navigate(-1)}
+              aria-label="Go back"
+            >
+              <ArrowLeft className="h-5 w-5 text-teal-800 font-weight-800" />
+            </Button>
+            <h1 className="text-2xl font-bold text-teal-800">back </h1>
+          </div>
+
+          
+        </div>
           {/* Profile Header */}
           <div className="bg-linear-to-r from-cyan-100 to-teal-100 rounded-lg p-6 border border-cyan-100">
+           
+
+
             <div className="flex flex-col md:flex-row items-center gap-6">
               {/* Profile Image */}
               <div className="relative">
@@ -391,7 +455,7 @@ export default function ProfilePage() {
                               </p>
                             )}
                             <div className="text-xs text-gray-500 space-y-1">
-                              <p>Password must contain:</p>
+                              <p> For Strong Password :</p>
                               <ul className="list-disc list-inside space-y-0.5 ml-2">
                                 <li>At least 8 characters</li>
                                 <li>One uppercase letter</li>

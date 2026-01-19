@@ -255,7 +255,7 @@ export default function StockEntryPage() {
           </div>
         )}
         {/* Main Content */}
-        <div className="flex flex-1 flex-col gap-6 p-0 pt-0 max-w-7xl mx-auto w-full">
+        <div className="flex flex-1 flex-col gap-6 p-2 pt-0 max-w-7xl mx-auto w-full">
           
           <SectionHeader
             title="Stock Entry"

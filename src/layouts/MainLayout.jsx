@@ -4,7 +4,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import { Shell } from "lucide-react";
+import panelGif from "../../public/assets/AI-icon4.gif";
 import { MainPanel } from "@/components/panels/main-panel";
 
 // Breadcrumb configuration for each admin route
@@ -119,7 +119,8 @@ export default function MainLayout() {
       return {
         items: [
           { label: "PharmaDesk", href: "/dashboard" },
-          { label: "Inventory", href: "/stock" }
+          { label: "Inventory", href: "/stock" },
+           { label: "update", href: "/stock/update" }
         ],
         currentPage: "Update Medicine"
       };
@@ -141,7 +142,7 @@ export default function MainLayout() {
         <Toaster position="top-right" richColors />
         
         {/* Header - Renders once, stays mounted */}
-        <header className="flex h-16 shrink-0 items-center gap-2 bg-white/80 backdrop-blur-sm sticky top-0 z-999 border-b px-4">
+        <header className="flex h-16 shrink-0 items-center gap-2 bg-white/80 backdrop-blur-sm sticky top-0 z-30 border-b px-4">
           <PageBreadcrumb
             items={breadcrumbConfig.items}
             currentPage={breadcrumbConfig.currentPage}
@@ -154,13 +155,17 @@ export default function MainLayout() {
         </div>
 
         {/* Floating Shell Button */}
-        <button
-          className="fixed bottom-8 right-8 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all active:scale-95 z-50 flex items-center justify-center"
-          onClick={() => setIsPanelOpen(true)}
-          aria-label="Open main panel"
-        >
-          <Shell className="h-6 w-6" />
-        </button>
+     <button
+  className="fixed bottom-8 right-8 p-2 bg-black text-white rounded-full shadow-lg hover:bg-blue-700 transition-all active:scale-95 z-50 flex items-center justify-center"
+  onClick={() => setIsPanelOpen(true)}
+  aria-label="Open main panel"
+>
+  <img
+    src={panelGif}
+    alt="Open panel"
+    className="h-9 w-9 rounded-full"
+  />
+</button>
 
         {/* Main Panel */}
         <MainPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />

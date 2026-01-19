@@ -113,19 +113,11 @@ export default function TodoPage() {
   }
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "Todo", href: "/todo" }]} />
-        </header>
+
+<>
 
         {/* Main Content */}
-        <div className="flex flex-1 flex-col p-4 pt-0">
+        <div className="flex flex-1 flex-col p-1 pt-0">
           {/* Welcome Section */}
           <SectionHeader
             title="Your Daily Tasks"
@@ -263,7 +255,7 @@ export default function TodoPage() {
             </div>
           </div>
         </div>
-      </SidebarInset>
+  
 
       {/* Add Task Dialog - Separated */}
       <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
@@ -305,15 +297,8 @@ export default function TodoPage() {
         </DialogContent>
       </Dialog>
 
+</>
+       
 
-       {/* --- Floating Round Shell Button --- */}
-        <button 
-          className="fixed bottom-8 right-8 p-4 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all active:scale-95 z-50 flex items-center justify-center"
-         onClick={() => setIsPanelOpen(true)}>
-        
-          <Shell className="h-6 w-6" />
-        </button>
-   <MainPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
-    </SidebarProvider>
   )
 }

@@ -10,6 +10,7 @@ import { CanvasPanel } from "./canvas-panel"
 import { AITextRenderer } from "./ai-text-renderer"
 import { SmallTableRenderer } from "./small-table-renderer"
 import { ChatMenu } from "./chat-menu"
+import panelGif from "../../../public/assets/AI-icon4.gif"
 import {
   Brain,
   Search,
@@ -345,7 +346,11 @@ export function MainPanel({ isOpen, onClose }) {
         {/* HEADER */}
         <div className="p-4 border-b border-blue-600/20 flex justify-between items-center shrink-0 pointer-events-auto bg-gradient-to-r from-blue-600/5 to-transparent">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-            <Shell className="w-5 h-5 text-blue-600 shrink-0" />
+              <img
+                src={panelGif}
+                alt="Open panel"
+                className="h-9 w-9 rounded-full"
+              />
             <h2 className="font-semibold truncate text-blue-600">{chatTitle}</h2>
           </div>
           <div className="flex gap-2 shrink-0">

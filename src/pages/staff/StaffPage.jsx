@@ -146,7 +146,7 @@ export default function StaffPage() {
           <div className="flex justify-end mb-4">
             <Button
               className="bg-linear-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white cursor-pointer"
-              onClick={() => navigate("/staff/add-employee")}
+              onClick={() => navigate("/admin/staff/add-employee")}
             >
               <Plus className="h-4 w-4 mr-2" />
               Add Employee

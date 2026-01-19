@@ -114,7 +114,7 @@ export default function AddEmployeePage() {
   };
 
   const handleCancel = () => {
-    navigate("/staff");
+    navigate("/admin/staff");
   };
 
   return (

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
-import { SalesDetailsDialog } from "./SalesDetailsDialog"; // Ensure this is the updated one from previous step
+import { SalesDetailsDialog } from "./SalesDetailsDialog";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,7 +28,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { downloadAsExcel } from "@/lib/download-utils"
 
-export default function WorkerSalesReportPage() {
+export default function SalesReportPage() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [sales, setSales] = useState([]);
@@ -71,9 +71,6 @@ export default function WorkerSalesReportPage() {
 
     fetchSales();
   }, []);
-
-  // --- DELETE THE fetchSaleByID useEffect HERE --- 
-  // It was causing the infinite loop. The Dialog handles fetching now.
 
   const handleExcelReport = async () => {
     try{
@@ -145,10 +142,9 @@ export default function WorkerSalesReportPage() {
     }
   };
 
-  // Simplified Handler
   const handleViewSale = (sale) => {
-    setSelectedSale(sale); // Just set the object you have
-    setIsViewModalOpen(true); // Open modal (Modal will fetch details if needed)
+    setSelectedSale(sale);
+    setIsViewModalOpen(true);
   };
 
   const handleCloseModal = () => {
@@ -209,24 +205,11 @@ export default function WorkerSalesReportPage() {
   };
 
   return (
-    <SidebarProvider>
-     
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/worker" },              
-              { label: "Sales Reports", href: "worker/sales" },
-            ]}
-            currentPage="Sales Reports"
-          />
-        </header>
-
+    <>
         {/* Main Content */}
         <div className="flex flex-1 flex-col">
           {/* Back Button and Title */}
-          <div className="flex items-center justify-between p-4">
+          <div className="flex items-center justify-between p-2">
             <div className="flex items-center gap-4">
               <Button
                 variant="ghost"
@@ -234,9 +217,9 @@ export default function WorkerSalesReportPage() {
                 onClick={() => navigate("/worker")}
                 aria-label="Go back"
               >
-                <ArrowLeft className="h-5 w-5" />
+                <ArrowLeft className="h-5 w-5 text-green-800 font-weight-bold" />
               </Button>
-              <h1 className="text-2xl font-bold text-gray-800">Sales List</h1>
+              <h1 className="text-2xl font-bold text-green-800">Sales List</h1>
             </div>
             <Button
               onClick={handleExcelReport}
@@ -259,7 +242,7 @@ export default function WorkerSalesReportPage() {
                   placeholder="Search by sale no, employee, or customer..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-10 border-cyan-200 focus:border-cyan-500 w-full"
+                  className="pl-10 pr-10 border-green-200 focus:border-green-500 w-full"
                 />
                 {searchTerm && (
                   <button
@@ -274,7 +257,7 @@ export default function WorkerSalesReportPage() {
               {/* Sort Dropdown */}
               <div className="w-full md:w-48">
                 <Select value={sortBy} onValueChange={setSortBy}>
-                  <SelectTrigger className="w-full border-cyan-200 focus:border-cyan-500">
+                  <SelectTrigger className="w-full border-green-200 focus:border-green-500">
                     <SelectValue placeholder="Sort by..." />
                   </SelectTrigger>
                   <SelectContent>
@@ -293,8 +276,8 @@ export default function WorkerSalesReportPage() {
           </div>
 
           {/* Sticky Table Header */}
-          <div className="sticky top-37 z-10 bg-linear-to-r from-cyan-50 to-teal-50 border-b border-cyan-200">
-            <div className="hidden md:grid grid-cols-7 gap-4 p-4 font-semibold text-teal-800">
+          <div className="sticky top-37 z-10 bg-gradient-to-r from-green-50 to-emerald-50 border-b border-green-200">
+            <div className="hidden md:grid grid-cols-7 gap-4 p-4 font-semibold text-green-800">
               <div className="text-center">S.No</div>
               <div>Sale No</div>
               <div>Employee</div>
@@ -304,7 +287,7 @@ export default function WorkerSalesReportPage() {
               <div className="text-center">Delete</div>
             </div>
             {/* Mobile Header */}
-            <div className="md:hidden p-4 font-semibold text-teal-800 text-center">
+            <div className="md:hidden p-4 font-semibold text-green-800 text-center">
               Sales List
             </div>
           </div>
@@ -319,7 +302,7 @@ export default function WorkerSalesReportPage() {
               currentSales.map((sale, index) => (
                 <div
                   key={sale.sale_id}
-                  className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                  className="border-b border-gray-100 hover:bg-green-50 transition-colors"
                 >
                   {/* Desktop View */}
                   <div className="hidden md:grid grid-cols-7 gap-4 p-4">
@@ -345,7 +328,7 @@ export default function WorkerSalesReportPage() {
                     <div className="text-center">
                       <Button
                         size="sm"
-                        className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-xs rounded"
+                        className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 text-xs rounded"
                         onClick={() => handleViewSale(sale)}
                       >
                         View
@@ -372,7 +355,7 @@ export default function WorkerSalesReportPage() {
                       <div className="flex gap-2">
                         <Button
                           size="sm"
-                          className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-xs rounded"
+                          className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 text-xs rounded"
                           onClick={() => handleViewSale(sale)}
                         >
                           View
@@ -453,7 +436,6 @@ export default function WorkerSalesReportPage() {
           onDelete={handleDeleteSale}
           onClose={handleCloseModal}
         />
-      </SidebarInset>
-    </SidebarProvider>
+    </>
   );
 }

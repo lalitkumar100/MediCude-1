@@ -1,18 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { Shell } from "lucide-react"
-import { MainPanel } from "@/components/panels/main-panel"
+
 
 import { useNavigate } from "react-router-dom";
-import { AppSidebar } from "@/components/AppSidebar";
+
 import { MedicineDetailsDialog } from "./MedicineDetailsDialog";
-import PageBreadcrumb from "@/components/PageBreadcrumb";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar";
+
 import {
   Select,
   SelectContent,

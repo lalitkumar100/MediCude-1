@@ -144,40 +144,29 @@ export default function WholesalerReportPage() {
   };
 
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
-        {/* Header */}
-        <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[data-collapsible=icon]/sidebar-wrapper:h-12">
-          <PageBreadcrumb
-            items={[
-              { label: "PharmaDesk", href: "/dashboard" },
-              { label: "Reports", href: "/report" },
-              { label: "wholesaler Reports", href: "/invoice" }
-            ]} 
-          />
-        </header>
-
+ 
+<>
         {/* Main Content */}
-        <div className="flex flex-1 flex-col">
-          {/* Back Button and Title */}
-          <div className="flex items-center gap-4 p-4">
-            <Button
+      <div className="flex flex-1 flex-col min-h-screen bg-gray-50">          {/* Back Button and Title */}
+        <div className="flex items-center justify-between gap-4 p-4 bg-white border-b">
+     <div className="flex items-center gap-4 ">
+             <Button
               variant="ghost"
               size="icon"
-              onClick={() => navigate("/report")}
+              onClick={() => navigate("/admin/report")}
               aria-label="Go back"
             >
-              <ArrowLeft className="h-5 w-5" />
+              <ArrowLeft className="h-5 w-5 text-cyan-800 font-weight-bold" />
             </Button>
-            <h1 className="text-2xl font-bold text-gray-800">
+            <h1 className="text-2xl font-bold text-cyan-800">
               Wholesaler List
             </h1>
+     </div>
 
             <Button
               onClick={handleExcelReport}
               disabled={loading}
-              className="bg-green-600 hover:bg-green-700 text-white flex items-center gap-2"
+              className="bg-cyan-600 hover:bg-cyan-700 text-white flex items-center gap-2"
             >
               <FileSpreadsheet className="h-4 w-4" />
               Export Excel
@@ -185,9 +174,9 @@ export default function WholesalerReportPage() {
           </div>
 
           {/* Sticky Filter Bar */}
-          <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4">
-            <div className="grid grid-cols-1 gap-3 md:flex md:items-center md:gap-4">
-              {/* Search Input */}
+       <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4">
+          <div className="grid grid-cols-1 gap-3 md:flex md:items-center md:gap-4">
+            {/* Search Input */}
               <div className="relative w-full md:flex-1 md:max-w-md">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <Input
@@ -235,7 +224,7 @@ export default function WholesalerReportPage() {
           </div>
 
           {/* Sticky Table Header */}
-          <div className="sticky top-37 z-10 bg-linear-to-r from-cyan-50 to-teal-50 border-b border-cyan-200">
+          <div className="sticky top-[73px] z-10 bg-gradient-to-r from-cyan-50 to-teal-50 border-b border-cyan-200">
             <div className="hidden md:grid grid-cols-5 gap-4 p-4 font-semibold text-teal-800">
               <div className="text-center">S.No</div>
               <div>Wholesaler Name</div>
@@ -261,7 +250,7 @@ export default function WholesalerReportPage() {
           )}
 
           {!loading && !error && (
-            <div className="flex-1 max-h-[calc(100vh-250px)] overflow-y-auto">
+            <div className="flex-1 bg-white">
               {currentWholesalers.length > 0 ? (
                 currentWholesalers.map((wholesaler, index) => (
                   <div
@@ -329,7 +318,7 @@ export default function WholesalerReportPage() {
           )}
           
           {sampleWholesalers.length > itemsPerPage && (
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4">
+            <div className="bg-white border-t border-gray-200 p-4">
               <div className="flex items-center justify-center gap-4">
                 <Button
                   variant="outline"
@@ -371,7 +360,7 @@ export default function WholesalerReportPage() {
           isOpen={isAddModalOpen}
           onClose={handleCloseAddModal}
         />
-      </SidebarInset>
-    </SidebarProvider>
+   
+</>
   );
 }

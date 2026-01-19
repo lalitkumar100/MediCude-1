@@ -72,7 +72,7 @@ export default function WorkerLayout() {
   return (
     <SidebarProvider>
       {/* Use WorkerSidebar component if you have different sidebar for workers */}
-      <AppSidebar />
+ 
       <SidebarInset className="bg-white-100 transition-colors duration-500">
         <Toaster position="top-right" richColors />
         
@@ -85,7 +85,7 @@ export default function WorkerLayout() {
         </header>
 
         {/* Main Content - Child routes render here via <Outlet /> */}
-        <div className="flex flex-1 flex-col gap-6 p-6 max-w-7xl mx-auto w-full">
+        <div className="flex flex-1 flex-col gap-6 p-0 max-w-7xl mx-auto w-full">
           <Outlet />
         </div>
 

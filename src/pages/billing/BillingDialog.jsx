@@ -167,11 +167,11 @@ export function BillingDialog({
         </div>
 
         {/* BODY - Scrollable */}
-        <div className="flex-1 overflow-y-auto px-8 py-6">
-          <div className="space-y-6">
+        <div className="flex-1 overflow-y-auto   px-8 py-6"  style={{ zIndex: 99 }} >
+          <div className="space-y-6"  style={{ zIndex: 999 }}>
             
             {/* Search Section with z-index 999 for suggestions */}
-            <div className="space-y-3 relative" style={{ zIndex: 999 }} ref={dropdownRef}>
+            <div className="space-y-3 relative" style={{ zIndex: 99 }} ref={dropdownRef}>
               <Label htmlFor="itemSearch" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
                 <Search className="h-4 w-4 text-blue-600" />
                 Search Medicine

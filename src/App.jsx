@@ -22,7 +22,7 @@ import Todo from "./pages/todo/TodoPage";
 import ProfilePage from "./pages/profile/ProfilePage";
 // import Settings from "./";
 import Billing from "./pages/billing/BillingPage";
-
+import AccessDenial from "./AcessDenial";
 import WorkerDashboard from "./Worker/Dashboard";
 import WorkerSalesReportPage from "./Worker/sales/SalesReportPage";
 import WorkerTodoPage from "./Worker/TodoPage";
@@ -37,7 +37,7 @@ export default function App() {
         <Route path="/login" element={<LoginPage />} />
 
         {/* Admin Routes - MainLayout wrapper */}
-        <Route path="/" element={<MainLayout />}>
+        <Route path="/admin" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
           <Route path="dashboard" element={<DashboardPage />} />
           <Route path="addstock" element={<AddStock />} />
@@ -52,9 +52,10 @@ export default function App() {
           <Route path="staff/add-employee" element={<AddEmployeePage />} />
           <Route path="todo" element={<Todo />} />
           <Route path="billing" element={<Billing />} />
-          <Route path="profile" element={<ProfilePage />} />
+          
         </Route>
-
+         <Route path="Forbidden" element={<AccessDenial/>}/>
+         <Route path="profile" element={<ProfilePage />} />
         {/* Worker Routes - WorkerLayout wrapper */}
         <Route path="/worker" element={<WorkerLayout />}>
           <Route index element={<WorkerDashboard />} />

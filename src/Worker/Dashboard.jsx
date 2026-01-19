@@ -20,18 +20,12 @@ export default function WorkerDashboard() {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
 
   return (
-    <ThemeProvider>
-      <SidebarProvider>
+
+
       
-        <SidebarInset className="relative">
-          {/* Header */}
-          <header className="flex h-16 shrink-0 items-center gap-2">
-            <PageBreadcrumb
-              items={[
-                { label: "PharmaDesk", href: "/worker" },
-                { label: "Worker Portal", href: "/worker" }
-              ]} />
-          </header>
+<>
+ 
+       
 
           {/* Main Content */}
           <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -106,16 +100,10 @@ export default function WorkerDashboard() {
             {/* You could add a 'Recent Activity' or 'Live Clock' section here for workers */}
           </div>
 
-          {/* Floating Action Button */}
-          <button 
-            className="fixed bottom-8 right-8 p-4 bg-primary text-primary-foreground rounded-full shadow-2xl hover:scale-110 transition-all z-50"
-            onClick={() => setIsPanelOpen(true)}>
-            <Shell className="h-6 w-6 animate-pulse-slow" />
-          </button>
+    
+  
+</>
 
-          <MainPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
-        </SidebarInset>
-      </SidebarProvider>
-    </ThemeProvider>
+
   )
 }

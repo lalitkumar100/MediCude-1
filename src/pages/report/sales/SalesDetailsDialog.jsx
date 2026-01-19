@@ -14,7 +14,8 @@ import {
   Receipt,
   User,
   Calendar,
-  CreditCard
+  CreditCard,
+  Trash2 
 } from "lucide-react";
 import axios from "axios";
 
@@ -68,13 +69,55 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
     }
   };
 
+    const handleDeleteSale = async (sale) => {
+    if (!window.confirm("Are you sure you want to delete this sale?")) {
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await axios.delete(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/sales/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      // Refresh the sales list
+      const res = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/admin/sales`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.data && res.data.status === "success") {
+        const formattedSales = res.data.data.map((sale, index) => ({
+          ...sale,
+          sale_id: sale.sale_id || index + 1,
+        }));
+        setSales(formattedSales);
+        setTotalSales(formattedSales.length);
+      }
+    } catch (error) {
+      console.error("Failed to delete sale:", error);
+      alert("Failed to delete sale. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   // Helper to render content based on state
   const renderContent = () => {
     // 1. Loading State
     if (loading) {
       return (
         <div className="flex flex-col items-center justify-center py-20 space-y-4 h-full">
-          <Loader2 className="h-10 w-10 text-teal-600 animate-spin" />
+          <Loader2 className="h-10 w-10 text-green-600 animate-spin" />
           <p className="text-gray-500 font-medium">Fetching sale details...</p>
         </div>
       );
@@ -148,13 +191,13 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
           {/* Summary Cards */}
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 py-4">
              {/* Total Amount Highlight */}
-             <div className="col-span-2 md:col-span-1 bg-teal-50 border border-teal-100 rounded-lg p-4 flex flex-col justify-center">
-                <span className="text-xs uppercase font-bold text-teal-600 tracking-wider">Total Amount</span>
-                <span className="text-2xl font-bold text-teal-900 mt-1">
+             <div className="col-span-2 md:col-span-1 bg-green-100 border border-green-200 rounded-lg p-4 flex flex-col justify-center">
+                <span className="text-xs uppercase font-bold text-green-600 tracking-wider">Total Amount</span>
+                <span className="text-2xl font-bold text-green-900 mt-1">
                   ₹{parseFloat(saleDetails.total_amount || 0).toLocaleString("en-IN")}
                 </span>
                 {saleDetails.profit && (
-                    <span className="text-xs font-medium text-green-600 mt-1">
+                    <span className="text-xs font-medium text-emerald-600 mt-1">
                         Profit: ₹{parseFloat(saleDetails.profit).toLocaleString("en-IN")}
                     </span>
                 )}
@@ -165,7 +208,7 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
                 {displayData.map((item, index) => (
                 <div key={index} className="space-y-1">
                     <div className="flex items-center gap-2">
-                        <p className="text-xs uppercase tracking-wide text-teal-600 font-bold">
+                        <p className="text-xs uppercase tracking-wide text-green-600 font-bold">
                         {item.label}
                         </p>
                     </div>
@@ -180,15 +223,15 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
           {/* Sale Items Table */}
           {saleDetails.sale_items && saleDetails.sale_items.length > 0 ? (
             <div className="border border-gray-100 rounded-lg overflow-hidden mt-6 shadow-sm">
-              <div className="bg-teal-50 px-4 py-3 border-b border-teal-100">
-                  <h3 className="text-sm font-bold text-teal-900 uppercase tracking-wide">
+              <div className="bg-green-100 px-4 py-3 border-b border-green-200">
+                  <h3 className="text-sm font-bold text-green-900 uppercase tracking-wide">
                     Items List
                   </h3>
               </div>
               
               <div className="overflow-x-auto">
                 <table className="w-full text-sm text-left">
-                  <thead className="text-xs text-teal-800 uppercase bg-teal-50/50 border-b border-gray-100">
+                  <thead className="text-xs text-green-800 uppercase bg-green-50/50 border-b border-gray-100">
                     <tr>
                       <th className="px-4 py-3 font-semibold">Medicine Name</th>
                       <th className="px-4 py-3 text-right font-semibold">Rate</th>
@@ -211,7 +254,7 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
                         <td className="px-4 py-3 text-right text-gray-600">
                             {item.quantity}
                         </td>
-                        <td className="px-4 py-3 text-right font-semibold text-teal-700">
+                        <td className="px-4 py-3 text-right font-semibold text-green-700">
                           ₹{(parseFloat(item.rate) * parseInt(item.quantity)).toLocaleString("en-IN")}
                         </td>
                       </tr>
@@ -226,6 +269,8 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
                <p className="text-gray-500 italic">No items found for this sale.</p>
              </div>
           )}
+
+
         </div>
       );
     }
@@ -237,19 +282,14 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      {/* Key Changes for Scrolling:
-        1. max-h-[85vh]: Sets the max height of the dialog
-        2. flex flex-col: Allows us to use flex-1 on the content
-        3. overflow-hidden: Prevents double scrollbars
-      */}
       <DialogContent className="max-w-3xl max-h-[85vh] flex flex-col p-0 gap-0 overflow-hidden outline-none">
         
         {/* Fixed Header */}
-        <div className="px-6 py-4 border-b border-gray-100 bg-white shrink-0">
+        <div className="px-6 py-4  border-b border-gray-100 bg-white shrink-0">
             <DialogHeader>
             <DialogTitle className="text-xl font-bold text-gray-800 flex items-center  gap-3">
                 <span>Sale Details</span>
-                <span className="px-4 py-1 bg-teal-100 text-teal-800 text-sm rounded-full font-medium border border-teal-200">
+                <span className="px-4 py-1 bg-green-100 text-green-800 text-sm rounded-full font-medium border border-green-200">
                 #{sale.sale_no || sale.sale_id}
                 </span>
             </DialogTitle>
@@ -257,20 +297,21 @@ export function SalesDetailsDialog({ isOpen, onOpenChange, sale, onClose }) {
         </div>
 
         {/* Scrollable Content Area */}
-        {/* flex-1: Takes up remaining space. overflow-y-auto: Enables scroll here */}
         <div className="flex-1 overflow-y-auto px-6 py-2">
            {renderContent()}
         </div>
 
-        {/* Fixed Footer */}
+                          {/* Fixed Footer */}
         <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 shrink-0">
-          <Button
-            variant="outline"
-            onClick={onClose}
-            className="px-6 bg-red-300 border-red-300 text-red-700 hover:bg-red-100 hover:text-red-700 hover:border-red-300 transition-all"
-          >
-            Close
-          </Button>
+           <Button
+                        size="sm"
+                        variant="destructive"
+                        className="bg-red-600 hover:bg-red-700 text-white p-1"
+                        onClick={() => handleDeleteSale(sale)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                        Delete
+                      </Button>
         </div>
       </DialogContent>
     </Dialog>
