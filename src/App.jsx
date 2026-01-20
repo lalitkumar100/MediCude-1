@@ -29,13 +29,15 @@ import WorkerTodoPage from "./Worker/TodoPage";
 import WorkerStockPage from "./Worker/stock/StockPage";
 import WorkerBillingPage from "./Worker/billing/BillingPage";
 import StockReturnPage from "./pages/report/Stock-Return/StockReturnPage";
+import LandingPage from "./landingPage";
+import Finktrack from "./pages/fintrack/Finktrack";
 export default function App() {
   return (
   <BrowserRouter>
       <Routes>
         {/* Public Routes - No Layout */}
         <Route path="/login" element={<LoginPage />} />
-
+        <Route path="/" element={<LandingPage />} />
         {/* Admin Routes - MainLayout wrapper */}
         <Route path="/admin" element={<MainLayout />}>
           <Route index element={<Navigate to="/dashboard" replace />} />
@@ -52,7 +54,7 @@ export default function App() {
           <Route path="staff/add-employee" element={<AddEmployeePage />} />
           <Route path="todo" element={<Todo />} />
           <Route path="billing" element={<Billing />} />
-          
+          <Route path="fintrack" element={<Finktrack />} />
         </Route>
          <Route path="Forbidden" element={<AccessDenial/>}/>
          <Route path="profile" element={<ProfilePage />} />

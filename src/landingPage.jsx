@@ -1,356 +1,554 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  ShieldCheck, 
-  LayoutDashboard, 
-  CloudUpload, 
-  Users, 
-  Bot, 
-  FileText, 
-  CheckSquare, 
-  Smartphone, 
+  Scan, 
+  MessageSquare, 
   TrendingUp, 
-  Menu, 
-  X, 
-  Play, 
-  FileCheck,
+  Cloud, 
+  CheckSquare, 
+  Shield, 
+  Users, 
+  BarChart3,
+  Github,
+  Linkedin,
+  Phone,
   ChevronRight,
-  Database,
+  Sparkles,
   Lock,
-  ArrowRight,
-  Star
+  Eye,
+  X,
+  Mail,
+  User
 } from 'lucide-react';
 
-const App = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+const MedicudeLanding = () => {
+  const [scrollY, setScrollY] = useState(0);
+  const [showContactDialog, setShowContactDialog] = useState(false);
+  const [formData, setFormData] = useState({ name: '', email: '', contact: '' });
+  const [submitted, setSubmitted] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
-    };
+    const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const features = [
-    { 
-      title: "AI-Powered Assistant", 
-      desc: "Get intelligent stock predictions, expiry alerts, and automated customer queries handled by our 24/7 AI bot.", 
-      icon: <Bot className="w-10 h-10" />,
-      color: "bg-teal-50" 
-    },
-    { 
-      title: "Auto-Invoice Stocking", 
-      desc: "Simply upload a photo or PDF of your invoice. Medicude's OCR technology automatically updates your inventory.", 
-      icon: <FileCheck className="w-10 h-10" />,
-      color: "bg-cyan-50" 
-    },
-    { 
-      title: "FinTrack Analysis", 
-      desc: "Monitor your pharmacy's financial health with real-time profit tracking, expense reports, and tax readiness.", 
-      icon: <TrendingUp className="w-10 h-10" />,
-      color: "bg-emerald-50" 
-    },
-    { 
-      title: "Multi-Role Governance", 
-      desc: "Granular control for Admins to manage everything, and a simplified interface for workers to handle sales.", 
-      icon: <Users className="w-10 h-10" />,
-      color: "bg-teal-50" 
-    },
-    { 
-      title: "Iron-Clad Security", 
-      desc: "End-to-end encryption for patient data and financial records. High-level protection against unauthorized access.", 
-      icon: <Lock className="w-10 h-10" />,
-      color: "bg-cyan-50" 
-    },
-    { 
-      title: "Hybrid Cloud Backup", 
-      desc: "Your data is always safe. Real-time cloud sync ensures you can restore everything instantly if hardware fails.", 
-      icon: <Database className="w-10 h-10" />,
-      color: "bg-emerald-50" 
-    },
-  ];
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => {
+      setShowContactDialog(false);
+      setSubmitted(false);
+      setFormData({ name: '', email: '', contact: '' });
+    }, 2000);
+  };
 
-  const reviews = [
-    { 
-      name: "Dr. Elena Rodriguez", 
-      role: "Pharmacy Owner", 
-      text: "Medicude's AI stocking saved us 10 hours of manual data entry every week. The financial tracking is incredibly precise.",
-      stars: 5
+  const features = [
+    {
+      icon: <Scan className="w-8 h-8" />,
+      title: "AI Invoice Vision",
+      description: "Automatically add stock by uploading a PDF or a photo of your invoice. No manual typing; our AI extracts medicine names, batch numbers, and expiry dates instantly."
     },
-    { 
-      name: "James Wilson", 
-      role: "Head Pharmacist", 
-      text: "The worker interface is so simple that my staff required almost zero training. The mobile app makes inventory checks a breeze.",
-      stars: 5
+    {
+      icon: <MessageSquare className="w-8 h-8" />,
+      title: "AI Pharmacy Assistant",
+      description: "A built-in chat interface. Ask \"What is my stock status?\" or \"Give me a hint on improving operations,\" and get real-time data-driven answers."
     },
-    { 
-      name: "Aisha Khan", 
-      role: "Operations Manager", 
-      text: "High-security standards were our priority. Medicude delivered that plus an amazing dashboard that runs smoothly on my tablet.",
-      stars: 5
+    {
+      icon: <TrendingUp className="w-8 h-8" />,
+      title: "FinTrack (Money Management)",
+      description: "A dedicated financial section to track cash flow, daily profit, and expenses. Visualize your growth with clean, minimalist charts."
+    },
+    {
+      icon: <Cloud className="w-8 h-8" />,
+      title: "Cloud Sync & Security",
+      description: "100% automated cloud storage. Your data is always backed up and accessible from anywhere, anytime."
+    },
+    {
+      icon: <CheckSquare className="w-8 h-8" />,
+      title: "Smart To-Do & Reminders",
+      description: "An integrated task manager to keep your pharmacy daily operations organized and on schedule."
     }
   ];
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-800 selection:bg-teal-100 selection:text-teal-900">
-      
-      {/* --- Navigation --- */}
-      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled ? 'bg-white/90 backdrop-blur-lg py-3 shadow-md' : 'bg-transparent py-5'}`}>
-        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
-          <div className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-500 to-cyan-400 rounded-lg flex items-center justify-center shadow-lg shadow-teal-200">
-              <ShieldCheck className="text-white w-6 h-6" />
-            </div>
-            <span className={`text-2xl font-bold tracking-tight ${scrolled ? 'text-teal-900' : 'text-white'}`}>
-              MEDICUDE
+    <div className="min-h-screen bg-white text-gray-900">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <img 
+            src='../public/assets/logo.png'
+              alt="Medicude Logo" 
+              className="w-10 h-10"
+            />
+            <span className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+              MediCude
             </span>
           </div>
-          
-          <div className="hidden md:flex space-x-10 font-medium items-center">
-            {['Features', 'Dashboard', 'Security', 'Reviews'].map((item) => (
-              <a 
-                key={item} 
-                href={`#${item.toLowerCase()}`} 
-                className={`transition-colors hover:text-teal-500 ${scrolled ? 'text-slate-600' : 'text-white/90'}`}
-              >
-                {item}
-              </a>
-            ))}
-            <button className="bg-teal-600 text-white px-6 py-2.5 rounded-full font-bold hover:bg-teal-700 transition shadow-lg shadow-teal-200 active:scale-95">
-              Get Started
-            </button>
+          <div className="hidden md:flex gap-8 text-sm font-medium text-gray-600">
+            <a href="#home" className="hover:text-teal-500 transition-colors">Home</a>
+            <a href="#features" className="hover:text-teal-500 transition-colors">Features</a>
+            <a href="#security" className="hover:text-teal-500 transition-colors">Security</a>
+            <a href="#contact" className="hover:text-teal-500 transition-colors">Contact</a>
           </div>
-
-          <button className={`md:hidden p-2 rounded-lg ${scrolled ? 'text-slate-800' : 'text-white'}`} onClick={() => setIsMenuOpen(!isMenuOpen)}>
-            {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
-          </button>
         </div>
-
-        {/* Mobile Menu */}
-        {isMenuOpen && (
-          <div className="md:hidden absolute top-full left-0 w-full bg-white border-b border-slate-100 p-6 flex flex-col space-y-4 shadow-xl">
-            <a href="#features" className="text-lg font-medium text-slate-700" onClick={() => setIsMenuOpen(false)}>Features</a>
-            <a href="#dashboard" className="text-lg font-medium text-slate-700" onClick={() => setIsMenuOpen(false)}>Dashboard</a>
-            <a href="#reviews" className="text-lg font-medium text-slate-700" onClick={() => setIsMenuOpen(false)}>Reviews</a>
-            <button className="bg-teal-600 text-white w-full py-4 rounded-xl font-bold">Start Free Trial</button>
-          </div>
-        )}
       </nav>
 
-      {/* --- Hero Section with Placeholder Background --- */}
-      <section className="relative h-screen min-h-[700px] flex items-center justify-center overflow-hidden">
-        
-        {/* VIDEO SLOT / BACKGROUND PLACEHOLDER */}
-        {/* Instruction for User: 
-          To add your video back, replace the 'bg-gradient-to-br' div below with:
-          <video autoPlay loop muted playsInline className="absolute inset-0 z-10 w-full h-full object-cover">
-            <source src="your-video-path.mp4" type="video/mp4" />
-          </video>
-        */}
-        <div className="absolute inset-0 z-10 bg-gradient-to-br from-teal-900 via-teal-800 to-cyan-900">
-           {/* Animated blobs for professional look without video */}
-           <div className="absolute top-0 -left-20 w-96 h-96 bg-teal-400/20 rounded-full blur-[120px] animate-pulse"></div>
-           <div className="absolute bottom-0 -right-20 w-[500px] h-[500px] bg-cyan-400/20 rounded-full blur-[150px] animate-pulse delay-700"></div>
-        </div>
+      {/* Hero Section */}
+      <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
+        {/* Video Background */}
+        <video
+          autoPlay
+          loop
+          muted
+          playsInline
+          onLoadedData={() => setVideoLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+            videoLoaded ? 'opacity-20' : 'opacity-0'
+          }`}
+        >
+          <source src="https://cdn.pixabay.com/video/2022/01/18/104714-667158804_large.mp4" type="video/mp4" />
+        </video>
+
+        {/* Fallback Animated Glow Background (shows until video loads) */}
+        <div 
+          className={`absolute w-[800px] h-[800px] rounded-full transition-opacity duration-1000 ${
+            videoLoaded ? 'opacity-0' : 'opacity-30'
+          }`}
+          style={{
+            background: 'radial-gradient(circle, rgba(64, 224, 208, 0.3) 0%, rgba(64, 224, 208, 0) 70%)',
+            animation: 'pulse 8s ease-in-out infinite',
+            transform: `scale(${1 + scrollY * 0.0002})`
+          }}
+        />
 
         {/* Overlay to ensure text readability */}
-        <div className="absolute inset-0 z-20 bg-slate-900/40"></div>
+        <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />
         
-        <div className="relative z-30 text-center px-6 max-w-5xl mt-12">
-          <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-8 text-white text-sm font-semibold shadow-xl">
-            <Bot size={16} />
-            <span>AI-Driven Pharmacy Management v4.0</span>
+        <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
+          {/* Floating Logo */}
+          <div 
+            className="mb-8 inline-block"
+            style={{
+              animation: 'float 6s ease-in-out infinite'
+            }}
+          >
+            <div className="relative">
+              <img 
+src='../public/assets/logo.png'                alt="Medicude" 
+                className="w-32 h-32 drop-shadow-2xl"
+              />
+              <div className="absolute inset-0 bg-teal-400/20 blur-3xl rounded-full" />
+            </div>
           </div>
-          
-          <h1 className="text-5xl md:text-8xl font-black text-white mb-8 leading-[1.1] drop-shadow-2xl">
-            The Smartest Way To <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-300 to-cyan-200">Manage Pharmacy</span>
+
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Pharmacy Management,<br />
+            <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+              Reimagined by AI.
+            </span>
           </h1>
           
-          <p className="text-xl md:text-2xl text-white/90 mb-12 max-w-3xl mx-auto leading-relaxed drop-shadow-md">
-            Revolutionize your operations with auto-invoice stocking, AI assistant, and real-time financial tracking. Designed for efficiency, built for security.
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto font-light">
+            Smart inventory, automated finances, and role-based control. One platform to rule your entire pharmacy operations.
           </p>
-          
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
-            <button className="group bg-teal-500 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-teal-400 shadow-2xl shadow-teal-500/30 transition-all hover:scale-105 flex items-center justify-center">
-              Request Demo <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="bg-white/10 backdrop-blur-md border-2 border-white/40 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-white/20 transition-all flex items-center justify-center">
-              <Play className="mr-3 w-6 h-6 fill-white" /> Watch Overview
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="/login"
+              className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
+            >
+              Get Demo
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
+            <button 
+              onClick={() => setShowContactDialog(true)}
+              className="px-8 py-4 border-2 border-teal-500 text-teal-500 rounded-full font-semibold text-lg hover:bg-teal-50 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <Mail className="w-5 h-5" />
+              Contact Us
             </button>
           </div>
         </div>
+
+        <style>{`
+          @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+          }
+          @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.3; }
+            50% { transform: scale(1.1); opacity: 0.5; }
+          }
+        `}</style>
       </section>
 
-      {/* --- Features Grid --- */}
-      <section id="features" className="py-32 relative overflow-hidden">
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/2 w-[500px] h-[500px] bg-teal-50 rounded-full blur-3xl opacity-50"></div>
-        <div className="absolute bottom-0 left-0 translate-y-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-cyan-50 rounded-full blur-3xl opacity-50"></div>
+      {/* Contact Dialog */}
+      {showContactDialog && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl max-w-md w-full p-8 relative animate-slideUp">
+            <button
+              onClick={() => setShowContactDialog(false)}
+              className="absolute top-6 right-6 text-gray-400 hover:text-gray-600 transition-colors"
+            >
+              <X className="w-6 h-6" />
+            </button>
 
-        <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">Built for Modern Pharmacies</h2>
-            <p className="text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
-              Powerful tools under one roof to automate the mundane and focus on patient care.
-            </p>
+            {!submitted ? (
+              <>
+                <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+                  Get in Touch
+                </h3>
+                <p className="text-gray-600 mb-8">Fill out the form and we'll reach out to you soon!</p>
+
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Name</label>
+                    <div className="relative">
+                      <User className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="text"
+                        required
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                        placeholder="Your name"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                    <div className="relative">
+                      <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="email"
+                        required
+                        value={formData.email}
+                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                        placeholder="your@email.com"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Contact</label>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                      <input
+                        type="tel"
+                        required
+                        value={formData.contact}
+                        onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                        className="w-full pl-12 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all"
+                        placeholder="+91 XXXXX XXXXX"
+                      />
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    className="w-full py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-xl font-semibold hover:shadow-xl hover:shadow-teal-500/30 transition-all duration-300"
+                  >
+                    Submit
+                  </button>
+                </form>
+              </>
+            ) : (
+              <div className="text-center py-8">
+                <div className="w-20 h-20 bg-gradient-to-r from-teal-500 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <h4 className="text-2xl font-bold text-gray-900 mb-2">Thank you for your interest!</h4>
+                <p className="text-gray-600">We will contact you soon.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* Features Section */}
+      <section id="features" className="py-32 px-6 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              The <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">AI-First</span> Experience
+            </h2>
+            <p className="text-xl text-gray-600">Powerful features designed for modern pharmacies</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
-            {features.map((f, i) => (
-              <div key={i} className="group p-10 bg-white border border-slate-100 rounded-[2.5rem] hover:shadow-2xl hover:shadow-teal-100 transition-all duration-500 hover:-translate-y-2 flex flex-col items-start">
-                <div className={`${f.color} text-teal-600 p-5 rounded-2xl mb-8 group-hover:scale-110 group-hover:bg-teal-600 group-hover:text-white transition-all duration-500`}>
-                  {f.icon}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <div 
+                key={index}
+                className="group relative bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gray-100 hover:border-teal-200 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/10"
+                style={{
+                  animation: `fadeInUp 0.6s ease-out ${index * 0.1}s both`
+                }}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                
+                <div className="relative">
+                  <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
+                    {feature.icon}
+                  </div>
+                  
+                  <h3 className="text-2xl font-semibold mb-4 text-gray-900">
+                    {feature.title}
+                  </h3>
+                  
+                  <p className="text-gray-600 leading-relaxed">
+                    {feature.description}
+                  </p>
                 </div>
-                <h3 className="text-2xl font-bold text-slate-900 mb-4">{f.title}</h3>
-                <p className="text-slate-500 leading-relaxed text-lg">{f.desc}</p>
               </div>
             ))}
           </div>
         </div>
+
+        <style>{`
+          @keyframes fadeInUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          @keyframes slideUp {
+            from {
+              opacity: 0;
+              transform: translateY(30px) scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          .animate-slideUp {
+            animation: slideUp 0.3s ease-out;
+          }
+        `}</style>
       </section>
 
-      {/* --- Dashboard Deep-Dive --- */}
-      <section id="dashboard" className="py-32 bg-slate-900 text-white rounded-[4rem] mx-4 my-8 overflow-hidden relative">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20 items-center">
-          <div className="relative order-2 md:order-1">
-            <div className="absolute -inset-10 bg-teal-500/20 rounded-full blur-[100px] animate-pulse"></div>
-            <div className="relative bg-slate-800 p-2 rounded-3xl shadow-3xl border border-white/10">
-              <div className="bg-slate-900 rounded-2xl overflow-hidden border border-white/5">
+      {/* Reviews Section */}
+      <section className="py-32 px-6 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              What Our <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">Clients Say</span>
+            </h2>
+            <p className="text-xl text-gray-600">Trusted by pharmacy owners across the country</p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {/* Review 1 */}
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gray-100 hover:border-teal-200 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/10">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-6 italic">
+                "Medicude has transformed how we manage our pharmacy. The AI invoice feature alone saves us hours every week. Highly recommended!"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
+                  RS
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Rajesh Sharma</p>
+                  <p className="text-sm text-gray-500">Sharma Medical Store, Delhi</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 2 */}
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gray-100 hover:border-teal-200 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/10">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-6 italic">
+                "The FinTrack feature gives me complete visibility into my business finances. The AI assistant is like having an expert advisor 24/7."
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
+                  PK
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Priya Kapoor</p>
+                  <p className="text-sm text-gray-500">HealthCare Pharmacy, Mumbai</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Review 3 */}
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gray-100 hover:border-teal-200 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/10">
+              <div className="flex gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400 fill-current" viewBox="0 0 20 20">
+                    <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-gray-700 mb-6 italic">
+                "Amazing software! The role-based access keeps our data secure while my staff can easily manage daily operations. Game changer!"
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-full flex items-center justify-center text-white font-bold">
+                  AM
+                </div>
+                <div>
+                  <p className="font-semibold text-gray-900">Amit Mehta</p>
+                  <p className="text-sm text-gray-500">MediPlus Pharmacy, Bangalore</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Role-Based Access Section */}
+      <section id="security" className="py-32 px-6 bg-gradient-to-b from-white to-gray-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-teal-50 rounded-full text-teal-600 font-semibold mb-6">
+              <Shield className="w-5 h-5" />
+              Security Feature
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4">
+              Dual-Dashboard System
+            </h2>
+            <p className="text-xl text-gray-600">Role-based access control for complete security</p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+            {/* Admin Mode */}
+            <div className="relative bg-gradient-to-br from-teal-500 to-cyan-500 rounded-3xl p-8 text-white overflow-hidden group hover:scale-105 transition-transform duration-300">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-20 -mt-20" />
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center mb-6">
+                  <Lock className="w-8 h-8" />
+                </div>
+                <h3 className="text-3xl font-bold mb-4">Admin Mode</h3>
+                <p className="text-teal-50 mb-6">
+                  Full access to FinTrack, staff management, and sensitive pharmacy analytics.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-white rounded-full" />
+                    <span className="text-sm">Complete financial oversight</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-white rounded-full" />
+                    <span className="text-sm">Staff management tools</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-white rounded-full" />
+                    <span className="text-sm">Advanced analytics dashboard</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Worker Mode */}
+            <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 overflow-hidden group hover:scale-105 transition-transform duration-300">
+              <div className="absolute top-0 right-0 w-40 h-40 bg-teal-50 rounded-full -mr-20 -mt-20" />
+              <div className="relative z-10">
+                <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center mb-6">
+                  <Eye className="w-8 h-8 text-white" />
+                </div>
+                <h3 className="text-3xl font-bold mb-4 text-gray-900">Worker Mode</h3>
+                <p className="text-gray-600 mb-6">
+                  A simplified, focused interface for employees to manage billing and stock checks without seeing sensitive financial data.
+                </p>
+                <div className="space-y-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full" />
+                    <span className="text-sm text-gray-700">Streamlined billing interface</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full" />
+                    <span className="text-sm text-gray-700">Stock management access</span>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-teal-500 rounded-full" />
+                    <span className="text-sm text-gray-700">Limited data visibility</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer id="contact" className="bg-gray-900 text-gray-300 py-16 px-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid md:grid-cols-4 gap-12 mb-12">
+            {/* Brand */}
+            <div className="md:col-span-2">
+              <div className="flex items-center gap-3 mb-4">
                 <img 
-                  src="https://images.unsplash.com/photo-1551288049-bbb652167014?auto=format&fit=crop&w=1200&q=80" 
-                  alt="Medicude Analytics Dashboard" 
-                  className="w-full opacity-90 hover:opacity-100 transition-opacity"
+                  src='../public/assets/logo.png'
+                  alt="Medicude" 
+                  className="w-10 h-10"
                 />
-                <div className="p-6 border-t border-white/5 flex justify-between items-center bg-slate-800/50 backdrop-blur-sm">
-                   <div className="flex space-x-2">
-                     <div className="w-3 h-3 rounded-full bg-red-400"></div>
-                     <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
-                     <div className="w-3 h-3 rounded-full bg-green-400"></div>
-                   </div>
-                   <span className="text-xs font-mono text-slate-400 uppercase tracking-widest">LIVE ANALYTICS ENGINE</span>
-                </div>
+                <span className="text-2xl font-bold text-white">MediCude</span>
               </div>
-            </div>
-          </div>
-
-          <div className="order-1 md:order-2 space-y-8">
-            <div className="inline-block px-4 py-1.5 bg-teal-500/10 border border-teal-500/20 rounded-full text-teal-400 text-sm font-bold tracking-widest uppercase">
-              Intuitive Interface
-            </div>
-            <h2 className="text-4xl md:text-5xl font-black leading-tight">User-Friendly, Even <br/> for the Busiest Days</h2>
-            <p className="text-xl text-slate-400 leading-relaxed">
-              Whether you're an Admin overseeing ten branches or a worker processing a single sale, Medicude's dashboard adapts to your role.
-            </p>
-            
-            <div className="grid grid-cols-1 gap-6">
-              {[
-                { icon: <LayoutDashboard size={20}/>, text: "Automated Daily Profit Reports" },
-                { icon: <CheckSquare size={20}/>, text: "Collaborative To-Do Lists for Staff" },
-                { icon: <Smartphone size={20}/>, text: "Seamless Tablet & Mobile Experience" }
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center space-x-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition">
-                  <div className="text-teal-400">{item.icon}</div>
-                  <span className="text-lg font-medium">{item.text}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="pt-6">
-               <div className="flex items-center space-x-4 mb-4 border-l-2 border-teal-500 pl-6">
-                  <div>
-                    <p className="font-bold text-xl text-white">Admin Privileges</p>
-                    <p className="text-slate-400">Complete control over stocks, finance, and user roles.</p>
-                  </div>
-               </div>
-               <div className="flex items-center space-x-4 border-l-2 border-cyan-500 pl-6">
-                  <div>
-                    <p className="font-bold text-xl text-white">Worker Access</p>
-                    <p className="text-slate-400">Simplified UI for billing, searching items, and daily tasks.</p>
-                  </div>
-               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* --- Reviews Section --- */}
-      <section id="reviews" className="py-32 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-20">
-            <div className="mb-8 md:mb-0">
-              <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">Trusted by 2,000+ <br/> Pharmacists</h2>
-              <p className="text-xl text-slate-500">Real stories from pharmacies growing with Medicude.</p>
-            </div>
-            <div className="flex items-center space-x-2 bg-teal-50 px-6 py-4 rounded-2xl">
-              <div className="flex text-amber-400">
-                {[...Array(5)].map((_, i) => <Star key={i} size={24} fill="currentColor" />)}
-              </div>
-              <span className="text-xl font-bold text-teal-900">4.9/5 Rating</span>
-            </div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            {reviews.map((r, i) => (
-              <div key={i} className="p-10 bg-slate-50 rounded-[2rem] border border-slate-200/60 relative">
-                <div className="flex text-amber-400 mb-6">
-                  {[...Array(r.stars)].map((_, j) => <Star key={j} size={18} fill="currentColor" />)}
-                </div>
-                <p className="text-lg text-slate-700 italic mb-8 leading-relaxed">"{r.text}"</p>
-                <div className="flex items-center space-x-4 border-t border-slate-200 pt-8">
-                  <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-cyan-400 rounded-full shadow-lg"></div>
-                  <div>
-                    <h4 className="font-bold text-slate-900">{r.name}</h4>
-                    <p className="text-sm text-slate-500 font-medium">{r.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* --- Footer --- */}
-      <footer className="bg-slate-50 pt-24 pb-12">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-12 mb-16">
-            <div className="col-span-2">
-              <div className="flex items-center space-x-2 mb-8">
-                <div className="w-8 h-8 bg-teal-600 rounded-lg flex items-center justify-center">
-                  <ShieldCheck className="text-white w-5 h-5" />
-                </div>
-                <span className="text-2xl font-bold text-teal-900 tracking-tight">MEDICUDE</span>
-              </div>
-              <p className="text-slate-500 max-w-xs leading-relaxed text-lg mb-8">
-                The world's most intuitive AI-powered pharmacy management system. Secure, efficient, and mobile-ready.
+              <p className="text-gray-400 mb-4">
+                AI-powered pharmacy management ecosystem for the modern world.
+              </p>
+              <p className="text-sm text-gray-500">
+                Developed with ❤️ by <span className="text-teal-400 font-semibold">Lalit Kumar</span>
               </p>
             </div>
-            
+
+            {/* Quick Links */}
             <div>
-              <h5 className="font-bold text-slate-900 mb-6 uppercase tracking-widest text-xs">Product</h5>
-              <ul className="space-y-4 text-slate-500">
-                <li><a href="#" className="hover:text-teal-600 transition">FinTrack</a></li>
-                <li><a href="#" className="hover:text-teal-600 transition">AI Assistant</a></li>
-                <li><a href="#" className="hover:text-teal-600 transition">Inventory Management</a></li>
-              </ul>
+              <h4 className="text-white font-semibold mb-4">Quick Links</h4>
+              <div className="space-y-2">
+                <a href="#home" className="block hover:text-teal-400 transition-colors">Home</a>
+                <a href="#features" className="block hover:text-teal-400 transition-colors">Features</a>
+                <a href="#security" className="block hover:text-teal-400 transition-colors">Security</a>
+                <a href="#" className="block hover:text-teal-400 transition-colors">Privacy Policy</a>
+              </div>
             </div>
-            
+
+            {/* Contact */}
             <div>
-              <h5 className="font-bold text-slate-900 mb-6 uppercase tracking-widest text-xs">Legal</h5>
-              <ul className="space-y-4 text-slate-500">
-                <li><a href="#" className="hover:text-teal-600 transition">Security</a></li>
-                <li><a href="#" className="hover:text-teal-600 transition">Privacy</a></li>
-                <li><a href="#" className="hover:text-teal-600 transition">Terms</a></li>
-              </ul>
+              <h4 className="text-white font-semibold mb-4">Contact</h4>
+              <div className="space-y-3">
+                <a href="tel:+1234567890" className="flex items-center gap-2 hover:text-teal-400 transition-colors">
+                  <Phone className="w-4 h-4" />
+                  <span>+91 63602 11440</span>
+                </a>
+                <a href="https://www.linkedin.com/in/lalitkumar-choudhary-90b012321/" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-teal-400 transition-colors">
+                  <Linkedin className="w-4 h-4" />
+                  <span>LinkedIn</span>
+                </a>
+                <a href="https://github.com/lalitkumar100" target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-teal-400 transition-colors">
+                  <Github className="w-4 h-4" />
+                  <span>GitHub</span>
+                </a>
+              </div>
             </div>
           </div>
-          
-          <div className="pt-12 border-t border-slate-200 flex flex-col md:flex-row justify-between items-center text-slate-400">
-            <p className="italic">Medicude © 2026. All rights reserved.</p>
-            <div className="flex items-center space-x-2 mt-4 md:mt-0">
-               <Lock size={14} />
-               <span className="text-sm font-medium uppercase tracking-tighter">HIPAA Compliant</span>
-            </div>
+
+          <div className="border-t border-gray-800 pt-8 text-center text-sm text-gray-500">
+            <p>© 2026 Medicude AI. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -358,4 +556,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default MedicudeLanding;
