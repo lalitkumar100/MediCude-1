@@ -19,7 +19,7 @@ import {
   Mail,
   User
 } from 'lucide-react';
-import logo from '../public/assets/favicon.png';
+import logo from '../public/assets/favicon.svg';
 
 const MedicudeLanding = () => {
   const [scrollY, setScrollY] = useState(0);
