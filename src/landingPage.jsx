@@ -19,6 +19,7 @@ import {
   Mail,
   User
 } from 'lucide-react';
+import logo from '../public/assets/favicon.png';
 
 const MedicudeLanding = () => {
   const [scrollY, setScrollY] = useState(0);
@@ -78,7 +79,7 @@ const MedicudeLanding = () => {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
-            src='../public/assets/logo.png'
+            src={logo}
               alt="Medicude Logo" 
               className="w-10 h-10"
             />
@@ -135,8 +136,8 @@ const MedicudeLanding = () => {
             }}
           >
             <div className="relative">
-              <img 
-src='../public/assets/logo.png'                alt="Medicude" 
+             <img 
+src={logo}                alt="Medicude" 
                 className="w-32 h-32 drop-shadow-2xl"
               />
               <div className="absolute inset-0 bg-teal-400/20 blur-3xl rounded-full" />
@@ -502,7 +503,7 @@ src='../public/assets/logo.png'                alt="Medicude"
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
                 <img 
-                  src='../public/assets/logo.png'
+                  src={logo}
                   alt="Medicude" 
                   className="w-10 h-10"
                 />
