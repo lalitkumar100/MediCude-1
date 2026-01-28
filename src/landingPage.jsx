@@ -19,15 +19,17 @@ import {
   Mail,
   User
 } from 'lucide-react';
-import logo from '../public/assets/favicon.svg';
+
+import video from './video.mp4'
 
 const MedicudeLanding = () => {
+  const logo = '/assets/favicon.svg';
   const [scrollY, setScrollY] = useState(0);
   const [showContactDialog, setShowContactDialog] = useState(false);
   const [formData, setFormData] = useState({ name: '', email: '', contact: '' });
   const [submitted, setSubmitted] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-
+console.log(video);
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
@@ -79,7 +81,7 @@ const MedicudeLanding = () => {
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <img 
-            src={logo}
+            src='/assets/favicon.svg'
               alt="Medicude Logo" 
               className="w-10 h-10"
             />
@@ -99,90 +101,91 @@ const MedicudeLanding = () => {
       {/* Hero Section */}
       <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
         {/* Video Background */}
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          onLoadedData={() => setVideoLoaded(true)}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-20' : 'opacity-0'
-          }`}
-        >
-          <source src="https://cdn.pixabay.com/video/2022/01/18/104714-667158804_large.mp4" type="video/mp4" />
-        </video>
+  {/* Background Video */}
+<video
+  src={video}
+  autoPlay
+  loop
+  muted
+  playsInline
+  onLoadedData={() => setVideoLoaded(true)}
+  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+    videoLoaded ? 'opacity-100' : 'opacity-0'
+  }`}
+/>
 
-        {/* Fallback Animated Glow Background (shows until video loads) */}
-        <div 
-          className={`absolute w-[800px] h-[800px] rounded-full transition-opacity duration-1000 ${
-            videoLoaded ? 'opacity-0' : 'opacity-30'
-          }`}
-          style={{
-            background: 'radial-gradient(circle, rgba(64, 224, 208, 0.3) 0%, rgba(64, 224, 208, 0) 70%)',
-            animation: 'pulse 8s ease-in-out infinite',
-            transform: `scale(${1 + scrollY * 0.0002})`
-          }}
-        />
+{/* Fallback Animated Glow Background */}
+<div 
+  className={`absolute w-[800px] h-[800px] rounded-full transition-opacity duration-1000 ${
+    videoLoaded ? 'opacity-0' : 'opacity-30'
+  }`}
+  style={{
+    background: 'radial-gradient(circle, rgba(64, 224, 208, 0.35) 0%, rgba(64, 224, 208, 0) 70%)',
+    animation: 'pulse 8s ease-in-out infinite',
+    transform: `scale(${1 + scrollY * 0.0002})`
+  }}
+/>
 
-        {/* Overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-white/60 backdrop-blur-sm" />
-        
-        <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
-          {/* Floating Logo */}
-          <div 
-            className="mb-8 inline-block"
-            style={{
-              animation: 'float 6s ease-in-out infinite'
-            }}
-          >
-            <div className="relative">
-             <img 
-src={logo}                alt="Medicude" 
-                className="w-32 h-32 drop-shadow-2xl"
-              />
-              <div className="absolute inset-0 bg-teal-400/20 blur-3xl rounded-full" />
-            </div>
-          </div>
+{/* Softer Overlay (FIXED — was hiding video) */}
+<div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
 
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-            Pharmacy Management,<br />
-            <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
-              Reimagined by AI.
-            </span>
-          </h1>
-          
-          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto font-light">
-            Smart inventory, automated finances, and role-based control. One platform to rule your entire pharmacy operations.
-          </p>
+{/* Content */}
+<div className="max-w-5xl mx-auto px-6 text-center relative z-10">
+  {/* Floating Logo */}
+  <div 
+    className="mb-8 inline-block"
+    style={{ animation: 'float 6s ease-in-out infinite' }}
+  >
+    <div className="relative">
+      <img 
+        src={logo}
+        alt="Medicude"
+        className="w-32 h-32 drop-shadow-2xl"
+      />
+      <div className="absolute inset-0 bg-teal-400/20 blur-3xl rounded-full" />
+    </div>
+  </div>
 
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="/login"
-              className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
-            >
-              Get Demo
-              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </a>
-            <button 
-              onClick={() => setShowContactDialog(true)}
-              className="px-8 py-4 border-2 border-teal-500 text-teal-500 rounded-full font-semibold text-lg hover:bg-teal-50 transition-all duration-300 flex items-center justify-center gap-2"
-            >
-              <Mail className="w-5 h-5" />
-              Contact Us
-            </button>
-          </div>
-        </div>
+  <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+    Pharmacy Management,<br />
+    <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+      Reimagined by AI.
+    </span>
+  </h1>
+  
+  <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto font-light">
+    Smart inventory, automated finances, and role-based control. One platform to rule your entire pharmacy operations.
+  </p>
 
-        <style>{`
-          @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-          }
-          @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.3; }
-            50% { transform: scale(1.1); opacity: 0.5; }
-          }
-        `}</style>
+  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+    <a 
+      href="/login"
+      className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
+    >
+      Get Demo
+      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+    </a>
+    <button 
+      onClick={() => setShowContactDialog(true)}
+      className="px-8 py-4 border-2 border-teal-500 text-teal-500 rounded-full font-semibold text-lg hover:bg-teal-50 transition-all duration-300 flex items-center justify-center gap-2"
+    >
+      <Mail className="w-5 h-5" />
+      Contact Us
+    </button>
+  </div>
+</div>
+
+<style>{`
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-20px); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 0.3; }
+    50% { transform: scale(1.1); opacity: 0.5; }
+  }
+`}</style>
+
       </section>
 
       {/* Contact Dialog */}

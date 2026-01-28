@@ -28,7 +28,7 @@ import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
-import panelGif from "../../public/assets/logo.png"
+
 const menuItems = [
   { title: "Dashboard", url: "/admin/dashboard", icon: Home },
   { title: "Add Stock", url: "/admin/addstock", icon: Package },
@@ -64,7 +64,7 @@ export function AppSidebar(props) {
         <div className="flex items-center gap-2 px-4 py-2">
           <div className="flex h-8 w-8 items-center justify-center  bg-transparent">
            <img
-               src={panelGif}
+               src="../../public/assets/logo.png"
                alt="Open panel"
                className="h-8 w-8 "
              />

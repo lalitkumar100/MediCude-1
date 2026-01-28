@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Mail, Lock, ArrowRight } from "lucide-react";
-import panelGif from "../../public/assets/logo.png";
+import { Mail, Lock, ArrowRight, Link } from "lucide-react";
+
 
 const images = [
   "/img1.png", 
@@ -135,9 +135,9 @@ export default function LoginPage() {
         <div className="w-full max-w-md space-y-8 relative z-10">
           {/* Logo and Header */}
           <div className="text-center space-y-4">
-            <div className="mx-auto w-20 h-20 bg-gradient-to-br from-cyan-500 to-teal-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-cyan-500/20 hover:shadow-xl hover:shadow-cyan-500/30 transition-all duration-300 hover:scale-105">
+            <div className="mx-auto w-20 h-20  ">
               <img
-                src={panelGif}
+                src="/assets/favicon.svg"
                 alt="Logo"
                 className="w-16 h-16"
               />
@@ -216,23 +216,31 @@ export default function LoginPage() {
 
           {/* Footer */}
           <div className="space-y-4 pt-6 border-t border-gray-100">
-            <p className="text-center text-sm text-gray-600">
-              Don't have an account?{" "}
-              <span className="text-cyan-600 font-semibold cursor-pointer hover:text-cyan-700 transition-colors hover:underline">
-                Contact Admin
-              </span>
-            </p>
+           <p className="text-center text-sm text-gray-600">
+  Need any Help?{" "}
+  <a
+  href="https://mail.google.com/mail/?view=cm&fs=1&to=lalitkumar709086@gmail.com&su=Support%20Request(MediCude)&body=Hello%20Admin,%20I%20need%20help%20with mediCude%20..."
+  target="_blank"
+  rel="noopener noreferrer"
+  className="text-cyan-600 font-semibold hover:text-cyan-700 hover:underline transition-colors"
+>
+  Contact Developer
+</a>
+</p>
+
             
             {/* Trust badges */}
             <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                <span>Admin :Admin@medicude.com</span>
+                <span>Admin :Admin@medicude.com<br/>password :123456</span>
               </div>
               <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>
-                <span>Worker :Worker@medicude.com</span>
+                <span>Worker :Worker@medicude.com
+                  <br/>password :654321
+                </span>
               </div>
             </div>
           </div>

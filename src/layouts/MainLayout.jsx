@@ -4,9 +4,8 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import PageBreadcrumb from "@/components/PageBreadcrumb";
-import panelGif from "../../public/assets/AI-icon4.gif";
 import { MainPanel } from "@/components/panels/main-panel";
-
+import { Shell } from "lucide-react"; 
 // Breadcrumb configuration for each admin route
 const BREADCRUMB_CONFIG = {
   "/dashboard": {
@@ -160,10 +159,8 @@ export default function MainLayout() {
   onClick={() => setIsPanelOpen(true)}
   aria-label="Open main panel"
 >
-  <img
-    src={panelGif}
-    alt="Open panel"
-    className="h-9 w-9 rounded-full"
+  <Shell
+    className="h-9 w-9 rounded-full text-blue-600"
   />
 </button>
 

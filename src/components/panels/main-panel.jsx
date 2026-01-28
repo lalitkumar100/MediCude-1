@@ -1,16 +1,15 @@
-"use client"
+
 import axios from "axios"
 import { useEffect, useState, useRef } from "react"
 import { X, Send, Upload, Loader2, Maximize2, FileText, Database, RefreshCw, ChevronDown, ChevronUp, Shell, ArrowDown, Image } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
-import { Card } from "@/components/ui/card"
 import { useIsMobile } from "@/hooks/use-mobile"
 import { CanvasPanel } from "./canvas-panel"
 import { AITextRenderer } from "./ai-text-renderer"
 import { SmallTableRenderer } from "./small-table-renderer"
 import { ChatMenu } from "./chat-menu"
-import panelGif from "../../../public/assets/AI-icon4.gif"
+
 import {
   Brain,
   Search,
@@ -346,11 +345,7 @@ export function MainPanel({ isOpen, onClose }) {
         {/* HEADER */}
         <div className="p-4 border-b border-blue-600/20 flex justify-between items-center shrink-0 pointer-events-auto bg-gradient-to-r from-blue-600/5 to-transparent">
           <div className="flex items-center gap-2 flex-1 min-w-0">
-              <img
-                src={panelGif}
-                alt="Open panel"
-                className="h-9 w-9 rounded-full"
-              />
+             <Shell className="w-7 h-7 text-blue-600"/>
             <h2 className="font-semibold truncate text-blue-600">{chatTitle}</h2>
           </div>
           <div className="flex gap-2 shrink-0">
