@@ -20,8 +20,8 @@ export function CanvasPanel({ isOpen, content, contentType, isMobile, onClose })
   const panelClasses = isMobile
     ? "fixed inset-0 z-[60] bg-background"
     : isExpanded
-      ? "fixed left-0 top-0 h-screen w-[72%] bg-background border-r border-border shadow-2xl z-40"
-      : "fixed right-[28%] top-0 h-screen w-[40%] bg-background border-r border-border shadow-2xl z-40"
+      ? "fixed left-0 top-0 h-screen w-[100%] bg-background border-r border-border shadow-2xl z-400"
+      : "fixed right-0 top-0 h-screen w-[40%] bg-background border-r border-border shadow-2xl z-400"
 
   return (
     <>

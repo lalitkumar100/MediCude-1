@@ -64,7 +64,7 @@ export function AppSidebar(props) {
         <div className="flex items-center gap-2 px-4 py-2">
           <div className="flex h-8 w-8 items-center justify-center  bg-transparent">
            <img
-               src="../../public/assets/logo.png"
+               src="/assets/favicon.svg"
                alt="Open panel"
                className="h-8 w-8 "
              />

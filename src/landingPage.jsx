@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Scan, 
-  MessageSquare, 
-  TrendingUp, 
-  Cloud, 
-  CheckSquare, 
-  Shield, 
-  Users, 
+import {
+  Scan,
+  MessageSquare,
+  TrendingUp,
+  Cloud,
+  CheckSquare,
+  Shield,
+  Users,
   BarChart3,
   Github,
   Linkedin,
@@ -20,7 +20,7 @@ import {
   User
 } from 'lucide-react';
 
-import video from './video.mp4'
+import video from './video2.mp4'
 
 const MedicudeLanding = () => {
   const logo = '/assets/favicon.svg';
@@ -29,7 +29,7 @@ const MedicudeLanding = () => {
   const [formData, setFormData] = useState({ name: '', email: '', contact: '' });
   const [submitted, setSubmitted] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-console.log(video);
+  console.log(video);
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
@@ -80,9 +80,9 @@ console.log(video);
       <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img 
-            src='/assets/favicon.svg'
-              alt="Medicude Logo" 
+            <img
+              src='/assets/favicon.svg'
+              alt="Medicude Logo"
               className="w-10 h-10"
             />
             <span className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
@@ -101,81 +101,79 @@ console.log(video);
       {/* Hero Section */}
       <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden pt-20">
         {/* Video Background */}
-  {/* Background Video */}
-<video
-  src={video}
-  autoPlay
-  loop
-  muted
-  playsInline
-  onLoadedData={() => setVideoLoaded(true)}
-  className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-    videoLoaded ? 'opacity-100' : 'opacity-0'
-  }`}
-/>
+        {/* Background Video */}
+        <video
+          src={video}
+          autoPlay
+          loop
+          muted
+          playsInline
+          onLoadedData={() => setVideoLoaded(true)}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${videoLoaded ? 'opacity-100' : 'opacity-0'
+            }`}
+        />
 
-{/* Fallback Animated Glow Background */}
-<div 
-  className={`absolute w-[800px] h-[800px] rounded-full transition-opacity duration-1000 ${
-    videoLoaded ? 'opacity-0' : 'opacity-30'
-  }`}
-  style={{
-    background: 'radial-gradient(circle, rgba(64, 224, 208, 0.35) 0%, rgba(64, 224, 208, 0) 70%)',
-    animation: 'pulse 8s ease-in-out infinite',
-    transform: `scale(${1 + scrollY * 0.0002})`
-  }}
-/>
+        {/* Fallback Animated Glow Background */}
+        <div
+          className={`absolute w-[800px] h-[800px] rounded-full transition-opacity duration-1000 ${videoLoaded ? 'opacity-0' : 'opacity-30'
+            }`}
+          style={{
+            background: 'radial-gradient(circle, rgba(64, 224, 208, 0.35) 0%, rgba(64, 224, 208, 0) 70%)',
+            animation: 'pulse 8s ease-in-out infinite',
+            transform: `scale(${1 + scrollY * 0.0002})`
+          }}
+        />
 
-{/* Softer Overlay (FIXED — was hiding video) */}
-<div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
+        {/* Softer Overlay (FIXED — was hiding video) */}
+        <div className="absolute inset-0 bg-white/20 backdrop-blur-[2px]" />
 
-{/* Content */}
-<div className="max-w-5xl mx-auto px-6 text-center relative z-10">
-  {/* Floating Logo */}
-  <div 
-    className="mb-8 inline-block"
-    style={{ animation: 'float 6s ease-in-out infinite' }}
-  >
-    <div className="relative">
-      <img 
-        src={logo}
-        alt="Medicude"
-        className="w-32 h-32 drop-shadow-2xl"
-      />
-      <div className="absolute inset-0 bg-teal-400/20 blur-3xl rounded-full" />
-    </div>
-  </div>
+        {/* Content */}
+        <div className="max-w-5xl mx-auto px-6 text-center relative z-10">
+          {/* Floating Logo */}
+          <div
+            className="mb-8 inline-block"
+            style={{ animation: 'float 6s ease-in-out infinite' }}
+          >
+            <div className="relative">
+              <img
+                src={logo}
+                alt="Medicude"
+                className="w-32 h-32 drop-shadow-2xl"
+              />
+              <div className="absolute inset-0 bg-teal-400/20 blur-3xl rounded-full" />
+            </div>
+          </div>
 
-  <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-    Pharmacy Management,<br />
-    <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
-      Reimagined by AI.
-    </span>
-  </h1>
-  
-  <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto font-light">
-    Smart inventory, automated finances, and role-based control. One platform to rule your entire pharmacy operations.
-  </p>
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+            Pharmacy Management,<br />
+            <span className="bg-gradient-to-r from-teal-500 to-cyan-500 bg-clip-text text-transparent">
+              Reimagined by AI.
+            </span>
+          </h1>
 
-  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-    <a 
-      href="/login"
-      className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
-    >
-      Get Demo
-      <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-    </a>
-    <button 
-      onClick={() => setShowContactDialog(true)}
-      className="px-8 py-4 border-2 border-teal-500 text-teal-500 rounded-full font-semibold text-lg hover:bg-teal-50 transition-all duration-300 flex items-center justify-center gap-2"
-    >
-      <Mail className="w-5 h-5" />
-      Contact Us
-    </button>
-  </div>
-</div>
+          <p className="text-xl md:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto font-light">
+            Smart inventory, automated finances, and role-based control. One platform to rule your entire pharmacy operations.
+          </p>
 
-<style>{`
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a
+              href="/login"
+              className="px-8 py-4 bg-gradient-to-r from-teal-500 to-cyan-500 text-white rounded-full font-semibold text-lg hover:shadow-2xl hover:shadow-teal-500/50 transition-all duration-300 flex items-center justify-center gap-2 group"
+            >
+              Get Demo
+              <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+            </a>
+            <button
+              onClick={() => setShowContactDialog(true)}
+              className="px-8 py-4 border-2 border-teal-500 text-teal-500 rounded-full font-semibold text-lg hover:bg-teal-50 transition-all duration-300 flex items-center justify-center gap-2"
+            >
+              <Mail className="w-5 h-5" />
+              Contact Us
+            </button>
+          </div>
+        </div>
+
+        <style>{`
   @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-20px); }
@@ -287,7 +285,7 @@ console.log(video);
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div 
+              <div
                 key={index}
                 className="group relative bg-white/60 backdrop-blur-sm rounded-3xl p-8 border border-gray-100 hover:border-teal-200 transition-all duration-300 hover:shadow-xl hover:shadow-teal-500/10"
                 style={{
@@ -295,16 +293,16 @@ console.log(video);
                 }}
               >
                 <div className="absolute inset-0 bg-gradient-to-br from-teal-500/5 to-cyan-500/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                
+
                 <div className="relative">
                   <div className="w-16 h-16 bg-gradient-to-br from-teal-500 to-cyan-500 rounded-2xl flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform duration-300">
                     {feature.icon}
                   </div>
-                  
+
                   <h3 className="text-2xl font-semibold mb-4 text-gray-900">
                     {feature.title}
                   </h3>
-                  
+
                   <p className="text-gray-600 leading-relaxed">
                     {feature.description}
                   </p>
@@ -503,22 +501,31 @@ console.log(video);
         <div className="max-w-7xl mx-auto">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             {/* Brand */}
+            {/* Brand */}
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
-                <img 
-                  src={logo}
-                  alt="Medicude" 
-                  className="w-10 h-10"
-                />
+                <img src={logo} alt="Medicude" className="w-10 h-10" />
                 <span className="text-2xl font-bold text-white">MediCude</span>
               </div>
-              <p className="text-gray-400 mb-4">
+
+              <p className="text-gray-400 mb-6">
                 AI-powered pharmacy management ecosystem for the modern world.
               </p>
-              <p className="text-sm text-gray-500">
-                Developed with ❤️ by <span className="text-teal-400 font-semibold">Lalit Kumar</span>
-              </p>
+
+              {/* 👨‍💻 Developer Credit with Image */}
+              <div className="flex items-center gap-3 mt-4">
+                <img
+                  src="/assets/developer.png"
+                  alt="Lalit Kumar"
+                  className="w-12 h-12 rounded-full object-cover border-2 border-teal-400 shadow-md"
+                />
+                <div>
+                  <p className="text-sm text-gray-400">Developed with ❤️ by</p>
+                  <p className="text-teal-400 font-semibold">Lalit Kumar Choudhary</p>
+                </div>
+              </div>
             </div>
+
 
             {/* Quick Links */}
             <div>
@@ -527,7 +534,7 @@ console.log(video);
                 <a href="#home" className="block hover:text-teal-400 transition-colors">Home</a>
                 <a href="#features" className="block hover:text-teal-400 transition-colors">Features</a>
                 <a href="#security" className="block hover:text-teal-400 transition-colors">Security</a>
-                <a href="#" className="block hover:text-teal-400 transition-colors">Privacy Policy</a>
+                
               </div>
             </div>
 
