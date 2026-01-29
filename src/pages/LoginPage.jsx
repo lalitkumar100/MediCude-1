@@ -233,12 +233,12 @@ export default function LoginPage() {
             <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 bg-green-500 rounded-full"></div>
-                <span>Admin :Admin@medicude.com<br/>password :123456</span>
+                <span>worker :rohan.sharma@example.com<br/>password :123456</span>
               </div>
               <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
               <div className="flex items-center gap-1">
                 <div className="w-1.5 h-1.5 bg-cyan-500 rounded-full"></div>
-                <span>Worker :Worker@medicude.com
+                <span>Admin :neha.patel@example.com
                   <br/>password :654321
                 </span>
               </div>

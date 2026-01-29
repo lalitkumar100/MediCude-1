@@ -31,6 +31,7 @@ import WorkerBillingPage from "./Worker/billing/BillingPage";
 import StockReturnPage from "./pages/report/Stock-Return/StockReturnPage";
 import LandingPage from "./landingPage";
 import Finktrack from "./pages/fintrack/Finktrack";
+import NotFoundAnimated from "./pages/not_found";
 export default function App() {
   return (
   <BrowserRouter>
@@ -68,7 +69,7 @@ export default function App() {
         </Route>
 
         {/* Catch-all redirect */}
-        <Route path="*" element={<Navigate to="/login" replace />} />
+        <Route path="*" element={<NotFoundAnimated />} />
       </Routes>
     </BrowserRouter>
   );
